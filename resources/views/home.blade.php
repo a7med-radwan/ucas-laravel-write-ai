@@ -1,4 +1,5 @@
-<x-layouts.main-layout title="Home" main-class="pt-24 pb-section-gap max-w-container-max mx-auto px-gutter grid grid-cols-1 md:grid-cols-12
+<x-layout title="Home"
+    main-class="pt-24 pb-section-gap max-w-container-max mx-auto px-gutter grid grid-cols-1 md:grid-cols-12
 gap-8">
 
     <x-slot:style>
@@ -52,7 +53,8 @@ gap-8">
         <article
             class="group border border-outline-variant rounded-xl overflow-hidden bg-white hover:border-primary transition-colors duration-300">
             <div class="aspect-[16/9] overflow-hidden">
-                <img alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                <img alt=""
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                     data-alt="A macro photograph of high-quality cream-colored paper with deep black ink strokes, showcasing fine texture and professional calligraphy. The lighting is soft and cinematic, casting gentle shadows that emphasize the physical depth of the ink on the page. The overall aesthetic is minimalist and sophisticated, representing a premium editorial experience with high contrast and clarity."
                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBFBSyj6CkyvBOD_SRQ5A-cSY1Cdw5WCfpcpMbK6wt1gNKpKVEBIHZC_rRMCEvC8iTE1zTEYRtsP81jrHP0bo9ffojhdYOzgAhgs1Cz0q8QFqa0nSD_IfSMhW9ztTCe15twvtGHZkIn0PtjzGAqIbQpqDXsAI-wV5oooi_CA4cwuHj96Y1K7UbHK1q_5sWUMDjows8tWRxj4iMYvIBUd-ops3T519EOJ6RlLxzk1jn0Wtk_8HWTjpj__S_xDppqNI1tnhqIX3QSUad" />
             </div>
@@ -162,7 +164,7 @@ gap-8">
 
         <x-recommended-authors title="Top Authors" count="2" />
 
-        <x-widgets.newsletter> 
+        <x-widgets.newsletter>
             <p>Enter Your email</p>
             <x-slot:helper>
                 <p class="font-metadata text-metadata text-on-primary-container">We care about your privacy. Unsubscribe
@@ -172,10 +174,9 @@ gap-8">
     </aside>
 
     @section('nav')
-    @parent
-    <a class="text-on-surface-variant font-medium font-ui-label text-ui-label hover:text-primary transition-colors duration-200"
-        href="#">FAQ</a>
-
+        @parent
+        <a class="text-on-surface-variant font-medium font-ui-label text-ui-label hover:text-primary transition-colors duration-200"
+            href="#">FAQ</a>
     @endsection
 
-</x-layouts.main-layout>
+</x-layout>

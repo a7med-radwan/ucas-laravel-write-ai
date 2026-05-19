@@ -16,9 +16,11 @@ class PostController extends Controller
 
     public function index()
     {
+        
         return view('blog.index', [
             'posts' => $this->posts,
         ]);
+
     }
 
     public function show(int $id, string $slug = '')
@@ -38,5 +40,5 @@ class PostController extends Controller
         ]);
     }
 
-    
+
 }
