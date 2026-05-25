@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Actions\FileUpload;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PostRequest;
 use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Number;
 use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      */
@@ -56,18 +60,24 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(PostRequest $request, FileUpload $fileUpload)
     {
-        $request->merge([
+        //$fileUpload = app(FileUpload::class);
+        $clean = $request->validated();
+
+        $data = array_merge($clean, [
             'user_id' => 1, // TODO: get from auth()->id()
             'slug' => Str::slug($request->post('title')),
             'status' => 'published',
+            'cover_image' => $fileUpload->handle(key: 'cover', path: 'covers'),
         ]);
 
-        $post = Post::create($request->all());
+        $post = Post::create($data);
 
         // PRG: POST Redirect GET
-        return redirect()->route('dashboard.posts.index');
+        return redirect()
+            ->route('dashboard.posts.index')
+            ->with('status', 'Post created!');
     }
 
     /**
@@ -98,16 +108,26 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(PostRequest $request, FileUpload $fileUpload, string $id)
     {
         $post = Post::findOrFail($id);
-        $post->update($request->except([
-            '_method',
-            '_token',
-        ]));
+
+        $clean = $request->validated();
+        $data = \array_merge($clean, [
+            'cover_image' => $fileUpload->handle(key: 'cover', path: 'covers')
+        ]);
+
+        $post->update($data);
+
+        $previous = $post->getPrevious();
+        $prev_cover_image = $previous['cover_image'] ?? null;
+        if ($prev_cover_image !== $post->cover_image) {
+            Storage::disk('public')->delete($previous['cover_image']); // Delete the old cover image from storage
+        }
 
         // PRG: POST Redirect GET
-        return redirect()->route('dashboard.posts.index');
+        return redirect()->route('dashboard.posts.index')
+            ->with('status', 'Post updated!');
     }
 
     /**
@@ -115,9 +135,16 @@ class PostController extends Controller
      */
     public function destroy(string $id)
     {
-        Post::destroy($id);
+        //Post::destroy($id);
+        $post = Post::findOrFail($id);
+        $post->delete();
+
+        if ($post->cover_image) {
+            Storage::disk('public')->delete($post->cover_image); // Delete the cover image from storage
+        }
 
         // PRG: POST Redirect GET
-        return redirect()->route('dashboard.posts.index');
+        return redirect()->route('dashboard.posts.index')
+            ->with('status', 'Post deleted!');
     }
 }

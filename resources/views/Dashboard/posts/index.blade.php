@@ -2,6 +2,11 @@
 
     <main class="flex-grow pt-24 w-full max-w-container-max mx-auto px-gutter py-12">
         <!-- Header Section -->
+        @if (session()->has('status'))
+        <div class="p-2 bg-green-300 text-green-800">
+            {{ session()->get('status') }}
+        </div>
+        @endif
         <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
             <div>
                 <h1 class="font-display-lg text-display-lg text-on-background mb-2">Content Management</h1>
