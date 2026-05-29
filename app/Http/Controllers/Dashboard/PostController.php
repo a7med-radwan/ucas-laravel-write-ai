@@ -7,7 +7,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\PostRequest;
 use App\Models\Category;
 use App\Models\Post;
+use id;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Number;
 use Illuminate\Support\Str;
@@ -35,7 +37,7 @@ class PostController extends Controller
 
         $posts = Post::query()
             ->where('status', '=', $status)
-            ->where('user_id', '=', 1) // TODO: get from auth()->id()
+            ->where('user_id', '=', Auth::id() ?? 1)
             ->latest()
             ->get();
 
@@ -66,7 +68,7 @@ class PostController extends Controller
         $clean = $request->validated();
 
         $data = array_merge($clean, [
-            'user_id' => 1, // TODO: get from auth()->id()
+            'user_id' => $request->user()?->id ?? Auth::id() ?? 1,
             'slug' => Str::slug($request->post('title')),
             'status' => 'published',
             'cover_image' => $fileUpload->handle(key: 'cover', path: 'covers'),
@@ -117,12 +119,13 @@ class PostController extends Controller
             'cover_image' => $fileUpload->handle(key: 'cover', path: 'covers')
         ]);
 
+        $previousCover = $post->cover_image;
+
         $post->update($data);
 
-        $previous = $post->getPrevious();
-        $prev_cover_image = $previous['cover_image'] ?? null;
-        if ($prev_cover_image !== $post->cover_image) {
-            Storage::disk('public')->delete($previous['cover_image']); // Delete the old cover image from storage
+        $prev_cover_image = $previousCover;
+        if ($prev_cover_image && $prev_cover_image !== $post->cover_image) {
+            Storage::disk('public')->delete($prev_cover_image); // Delete the old cover image from storage
         }
 
         // PRG: POST Redirect GET
