@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
-use Illuminate\Http\Request;
+use App\Http\Requests\CategoryRequest;
 use Illuminate\Support\Str;
 
 class CategoryController extends Controller
@@ -33,13 +33,13 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
-        $request->merge([
-            'slug' => Str::slug($request->post('name')),
-        ]);
+        $data = $request->validated();
+        $data['slug'] = Str::slug($request->post('name'));
 
-        Category::create($request->all());
+        Category::create($data);
+
         return redirect()->route('dashboard.categories.index');
     }
 
@@ -68,12 +68,13 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(CategoryRequest $request, string $id)
     {
-        Category::findOrFail($id)->update($request->except([
-            '_method',
-            '_token',
-        ]));
+        $data = $request->validated();
+        $data['slug'] = Str::slug($request->post('name'));
+
+        Category::findOrFail($id)->update($data);
+
         return redirect()->route('dashboard.categories.index');
     }
 

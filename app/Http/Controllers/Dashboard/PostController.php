@@ -7,11 +7,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\PostRequest;
 use App\Models\Category;
 use App\Models\Post;
-use id;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Number;
 use Illuminate\Support\Str;
 
 class PostController extends Controller
@@ -37,7 +35,7 @@ class PostController extends Controller
 
         $posts = Post::query()
             ->where('status', '=', $status)
-            ->where('user_id', '=', Auth::id() ?? 1)
+            ->where('user_id', '=', Auth::id())
             ->latest()
             ->get();
 
@@ -68,7 +66,7 @@ class PostController extends Controller
         $clean = $request->validated();
 
         $data = array_merge($clean, [
-            'user_id' => $request->user()?->id ?? Auth::id() ?? 1,
+            'user_id' => $request->user()->id,
             'slug' => Str::slug($request->post('title')),
             'status' => 'published',
             'cover_image' => $fileUpload->handle(key: 'cover', path: 'covers'),
