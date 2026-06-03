@@ -94,41 +94,14 @@
                         "body-lg": ["Source Serif 4"]
                     },
                     "fontSize": {
-                        "headline-md": ["32px", {
-                            "lineHeight": "1.3",
-                            "fontWeight": "600"
-                        }],
-                        "ui-label": ["14px", {
-                            "lineHeight": "1.4",
-                            "letterSpacing": "0.01em",
-                            "fontWeight": "500"
-                        }],
-                        "display-lg": ["48px", {
-                            "lineHeight": "1.2",
-                            "letterSpacing": "-0.02em",
-                            "fontWeight": "700"
-                        }],
-                        "ui-button": ["16px", {
-                            "lineHeight": "1",
-                            "letterSpacing": "0.02em",
-                            "fontWeight": "600"
-                        }],
-                        "metadata": ["12px", {
-                            "lineHeight": "1.4",
-                            "fontWeight": "400"
-                        }],
-                        "body-md": ["18px", {
-                            "lineHeight": "1.6",
-                            "fontWeight": "400"
-                        }],
-                        "display-lg-mobile": ["32px", {
-                            "lineHeight": "1.2",
-                            "fontWeight": "700"
-                        }],
-                        "body-lg": ["20px", {
-                            "lineHeight": "1.6",
-                            "fontWeight": "400"
-                        }]
+                        "headline-md": ["32px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "ui-label": ["14px", { "lineHeight": "1.4", "letterSpacing": "0.01em", "fontWeight": "500" }],
+                        "display-lg": ["48px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "ui-button": ["16px", { "lineHeight": "1", "letterSpacing": "0.02em", "fontWeight": "600" }],
+                        "metadata": ["12px", { "lineHeight": "1.4", "fontWeight": "400" }],
+                        "body-md": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "display-lg-mobile": ["32px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "body-lg": ["20px", { "lineHeight": "1.6", "fontWeight": "400" }]
                     }
                 },
             },
@@ -173,7 +146,7 @@
                     </div>
                 @endif
                 @error(config('fortify.username'))
-                    <div class="mb-4 font-medium text-sm text-shadow-red-950 bg-red-200">
+                    <div class="mb-4 font-medium text-sm text-red-950 bg-red-200">
                         {{ $message }}
                     </div>
                 @enderror
@@ -265,16 +238,12 @@
             class="w-full py-section-gap px-gutter max-w-container-max mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
             <span class="font-headline-md text-headline-md text-on-surface">Ink &amp; Paper</span>
             <div class="flex gap-6">
-                <a class="font-body-md text-secondary hover:text-on-surface underline transition-all"
-                    href="#">About</a>
+                <a class="font-body-md text-secondary hover:text-on-surface underline transition-all" href="#">About</a>
                 <a class="font-body-md text-secondary hover:text-on-surface underline transition-all"
                     href="#">Privacy</a>
-                <a class="font-body-md text-secondary hover:text-on-surface underline transition-all"
-                    href="#">Terms</a>
-                <a class="font-body-md text-secondary hover:text-on-surface underline transition-all"
-                    href="#">API</a>
-                <a class="font-body-md text-secondary hover:text-on-surface underline transition-all"
-                    href="#">Help</a>
+                <a class="font-body-md text-secondary hover:text-on-surface underline transition-all" href="#">Terms</a>
+                <a class="font-body-md text-secondary hover:text-on-surface underline transition-all" href="#">API</a>
+                <a class="font-body-md text-secondary hover:text-on-surface underline transition-all" href="#">Help</a>
             </div>
             <p class="font-metadata text-metadata text-secondary">© 2024 Ink &amp; Paper Platform. All rights reserved.
             </p>

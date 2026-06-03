@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Post;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -16,29 +17,17 @@ class PostController extends Controller
 
     public function index()
     {
-        
         return view('blog.index', [
             'posts' => $this->posts,
         ]);
-
     }
 
-    public function show(int $id, string $slug = '')
+    public function show(string $slug)
     {
-        $post = null;
-        foreach ($this->posts as $p) {
-            if ($p['id'] === $id) {
-                $post = $p;
-                break;
-            }
-        }
-        if (!$post) {
-            abort(404);
-        }
-        return view('blog.single-standard', [
+        $post = Post::query()->where('slug', $slug)->firstOrFail();
+
+        return view('posts.show', [
             'post' => $post,
         ]);
     }
-
-
 }

@@ -111,7 +111,7 @@
                                 type="checkbox" />
                             <div class="flex-grow grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
                                 <div class="md:col-span-6">
-                                    <span class="text-metadata font-metadata text-primary mb-1 block">Editorial • 8
+                                    <span class="text-metadata font-metadata text-primary mb-1 block">{{$post->category->name}} • 8
                                         min read</span>
                                     <h3
                                         class="font-headline-md text-[20px] leading-snug group-hover:text-primary transition-colors">
@@ -130,7 +130,7 @@
                                         </div>
                                         <div class="flex items-center gap-1 text-ui-label font-medium">
                                             <span class="material-symbols-outlined text-[18px]"
-                                                data-icon="chat_bubble">chat_bubble</span> 84
+                                                data-icon="chat_bubble">chat_bubble</span> {{ $post->comments_count }}
                                         </div>
                                     </div>
                                 </div>

@@ -1,3 +1,8 @@
+<x-slot:head-scripts>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.2.1/tinymce.min.js"
+        referrerpolicy="origin" crossorigin="anonymous"></script>
+</x-slot:head-scripts>
+
 <form action="{{ $action ?? route('dashboard.posts.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
     @method($method ?? 'POST')
@@ -63,9 +68,10 @@
                         breathe and every idea has the weight it deserves.</p>
                 </div>
                 --}}
-                <textarea name="content"
+                <textarea name="content" id="content"
                     class="w-full bg-transparent border-none focus:ring-0 font-body-lg text-body-lg text-on-surface leading-relaxed placeholder:text-surface-variant"
-                    data-placeholder="Type your story..." oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'>{{ old('content', $post->content) }}</textarea>
+                    data-placeholder="Type your story..."
+                    oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'>{{ old('content', $post->content) }}</textarea>
                 @error('content')
                     <p class="text-red-800">{{ $message }}</p>
                 @enderror
@@ -112,7 +118,8 @@
                         <option>Select category</option>
                         @foreach ($categories as $category)
                             <option value="{{ $category->id }}" @if ($post->category_id == $category->id) selected @endif>
-                                {{ $category->name }}</option>
+                                {{ $category->name }}
+                            </option>
                         @endforeach
                     </select>
                 </section>
@@ -121,16 +128,15 @@
                 <section>
                     <h3 class="font-ui-label text-ui-label text-on-surface mb-4 uppercase tracking-wider">Tags</h3>
                     <div class="flex flex-wrap gap-2 mb-3">
-                        <span
-                            class="bg-primary-fixed text-on-primary-fixed px-3 py-1 rounded-full font-metadata text-metadata flex items-center gap-1">
-                            Minimalism <span class="material-symbols-outlined text-[14px] cursor-pointer">close</span>
-                        </span>
-                        <span
-                            class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-metadata text-metadata flex items-center gap-1">
-                            Writing <span class="material-symbols-outlined text-[14px] cursor-pointer">close</span>
-                        </span>
+                        @foreach ($post->tags as $tag)
+                            <span
+                                class="bg-primary-fixed text-on-primary-fixed px-3 py-1 rounded-full font-metadata text-metadata flex items-center gap-1">
+                                {{ $tag->name }} <span
+                                    class="material-symbols-outlined text-[14px] cursor-pointer">close</span>
+                            </span>
+                        @endforeach
                     </div>
-                    <input
+                    <input name="tags" value="{{ old('tags') }}"
                         class="w-full bg-white border border-outline-variant rounded-lg px-4 py-2 font-metadata text-metadata focus:ring-1 focus:ring-primary focus:border-primary transition-all"
                         placeholder="Add tag..." type="text" />
                 </section>
@@ -172,3 +178,14 @@
 
     </main>
 </form>
+<script>
+    tinymce.init({
+        selector: '#content',
+        plugins: [
+            'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount', 'image'
+        ],
+        toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+        branding: false,
+        promotion: false
+    });
+</script>

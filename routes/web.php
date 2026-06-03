@@ -5,7 +5,8 @@ use App\Http\Controllers\Dashboard\PostController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
-
+Route::get('/posts/{slug}', [\App\Http\Controllers\PostController::class, 'show'])
+    ->name('posts.show');
 Route::get('/', HomeController::class)->name('home');
 
 Route::group([

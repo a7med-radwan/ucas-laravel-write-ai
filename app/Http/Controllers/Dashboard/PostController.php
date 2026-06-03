@@ -3,14 +3,18 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Actions\FileUpload;
+use App\Actions\SyncPostTags;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PostRequest;
 use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Number;
 use Illuminate\Support\Str;
+use Throwable;
 
 class PostController extends Controller
 {
@@ -33,10 +37,29 @@ class PostController extends Controller
             'archived',
         ]);
 
-        $posts = Post::query()
-            ->where('status', '=', $status)
-            ->where('user_id', '=', Auth::id())
-            ->latest()
+        $user = Auth::user();
+
+        // select * from posts where user_id = ? and status = ? order by created_at desc
+        // select * from categories where id in (....)
+        $posts = $user->posts()
+            //->leftJoin('categories', 'posts.category_id', '=', 'categories.id')
+            ->with('category') // Eager loading
+            ->select([
+                'posts.id',
+                'category_id',
+                'title',
+                'posts.slug',
+                'views',
+                'status',
+                'posts.created_at',
+                //'categories.name as category_name',
+            ])
+            // ->addSelect(
+            //     DB::raw('(SELECT COUNT(*) FROM comments WHERE comments.post_id = posts.id) AS comments_count')
+            // )
+            ->withCount('comments')
+            ->where('status', $status)
+            ->orderBy('created_at', 'desc')
             ->get();
 
         return view('dashboard.posts.index', [
@@ -60,7 +83,7 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(PostRequest $request, FileUpload $fileUpload)
+    public function store(PostRequest $request, FileUpload $fileUpload, SyncPostTags $syncPostTags)
     {
         //$fileUpload = app(FileUpload::class);
         $clean = $request->validated();
@@ -72,8 +95,22 @@ class PostController extends Controller
             'cover_image' => $fileUpload->handle(key: 'cover', path: 'covers'),
         ]);
 
-        $post = Post::create($data);
+        DB::beginTransaction();
 
+        try {
+            $post = Post::create($data);
+            $syncPostTags->handle($post, $clean['tags'] ?? '');
+
+            DB::commit();
+        } catch (Throwable $e) {
+            DB::rollBack();
+
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'error' => 'Failed to create post: ' . $e->getMessage(),
+                ]);
+        }
         // PRG: POST Redirect GET
         return redirect()
             ->route('dashboard.posts.index')
@@ -108,7 +145,7 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(PostRequest $request, FileUpload $fileUpload, string $id)
+    public function update(PostRequest $request, FileUpload $fileUpload, SyncPostTags $syncPostTags, string $id)
     {
         $post = Post::findOrFail($id);
 
@@ -119,7 +156,19 @@ class PostController extends Controller
 
         $previousCover = $post->cover_image;
 
-        $post->update($data);
+        try {
+            DB::transaction(function () use ($post, $data, $syncPostTags, $clean) {
+                $post->update($data);
+
+                $syncPostTags->handle($post, $clean['tags'] ?? '');
+            });
+        } catch (Throwable $e) {
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'error' => 'Failed to update post: ' . $e->getMessage(),
+                ]);
+        }
 
         $prev_cover_image = $previousCover;
         if ($prev_cover_image && $prev_cover_image !== $post->cover_image) {
