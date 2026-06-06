@@ -16,7 +16,7 @@ class PostSeeder extends Seeder
     public function run(): void
     {
         $faker = Faker::create();
-        
+
         // Add 10 Categories
         $categories = [];
         for ($i = 0; $i < 10; $i++) {
@@ -34,7 +34,7 @@ class PostSeeder extends Seeder
         // Get some category and user IDs
         $categoryIds = DB::table('categories')->pluck('id')->toArray();
         $userIds = DB::table('users')->pluck('id')->toArray();
-        
+
         if (empty($userIds) || empty($categoryIds)) {
             return;
         }
@@ -49,6 +49,8 @@ class PostSeeder extends Seeder
             'https://images.unsplash.com/photo-1517842645767-c639042777db?q=80&w=2070&auto=format&fit=crop'
         ];
 
+        $statuses = ['published', 'draft', 'archived'];
+
         for ($i = 0; $i < 20; $i++) {
             $title = $faker->sentence;
             $posts[] = [
@@ -56,10 +58,10 @@ class PostSeeder extends Seeder
                 'category_id' => $faker->randomElement($categoryIds),
                 'title' => $title,
                 'content' => $faker->paragraphs(3, true),
-                'slug' => Str::slug($title),
+                'slug' => Str::slug($title) . '-' . ($i + 1),
                 'excerpt' => $faker->paragraph,
                 'cover_image' => $faker->randomElement($images),
-                'status' => 'published',
+                'status' => $statuses[$i % count($statuses)],
                 'views' => $faker->numberBetween(10, 1000),
                 'created_at' => $faker->dateTimeBetween('-1 month', 'now'),
                 'updated_at' => now(),

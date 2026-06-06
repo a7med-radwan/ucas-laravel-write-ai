@@ -2,29 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\PostStatus;
 use App\Models\Post;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    protected array $posts = [];
-
-    public function __construct()
-    {
-        $this->posts = include resource_path('data/posts.php');
-        // You can add middleware here if needed
-    }
 
     public function index()
     {
-        return view('blog.index', [
-            'posts' => $this->posts,
+        $posts = Post::query()->published()->latest()->get();
+
+        return view('posts.index', [
+            'posts' => $posts,
         ]);
     }
 
     public function show(string $slug)
     {
-        $post = Post::query()->where('slug', $slug)->firstOrFail();
+        $post = Post::query()
+            ->published()
+            ->slug($slug)
+            ->firstOrFail();
 
         return view('posts.show', [
             'post' => $post,

@@ -42,16 +42,11 @@ class PostController extends Controller
         // select * from posts where user_id = ? and status = ? order by created_at desc
         // select * from categories where id in (....)
         $posts = $user->posts()
+            ->withTrashed()
             //->leftJoin('categories', 'posts.category_id', '=', 'categories.id')
             ->with('category') // Eager loading
             ->select([
-                'posts.id',
-                'category_id',
-                'title',
-                'posts.slug',
-                'views',
-                'status',
-                'posts.created_at',
+                'posts.*',
                 //'categories.name as category_name',
             ])
             // ->addSelect(
@@ -189,12 +184,37 @@ class PostController extends Controller
         $post = Post::findOrFail($id);
         $post->delete();
 
+        // if ($post->cover_image) {
+        //     Storage::disk('public')->delete($post->cover_image); // Delete the cover image from storage
+        // }
+
+        // PRG: POST Redirect GET
+        return redirect()->route('dashboard.posts.index')
+            ->with('status', 'Post deleted!');
+    }
+
+    public function restore(string $id)
+    {
+        $post = Post::onlyTrashed()->findOrFail($id);
+        $post->restore();
+
+        // PRG: POST Redirect GET
+        return redirect()->route('dashboard.posts.index')
+            ->with('status', 'Post restored!');
+    }
+
+    public function forceDelete(string $id)
+    {
+        $post = Post::onlyTrashed()->findOrFail($id);
+
+        $post->forceDelete();
+
         if ($post->cover_image) {
             Storage::disk('public')->delete($post->cover_image); // Delete the cover image from storage
         }
 
         // PRG: POST Redirect GET
         return redirect()->route('dashboard.posts.index')
-            ->with('status', 'Post deleted!');
+            ->with('status', 'Post permanently deleted!');
     }
 }

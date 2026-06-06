@@ -44,7 +44,14 @@ class PostRequest extends FormRequest
                 'dimensions:min_width=600,min_height=400,max_width=2000,max_height=2000',
                 'max:1024'
             ],
+            'category_id' => ['required', 'exists:categories,id'],
             'tags' => ['nullable', 'string'],
+            'published_at' => ['nullable', 'date'],
+            'meta' => ['nullable', 'array'],
+            'meta.title' => ['nullable', 'string', 'max:255'],
+            'meta.keywords' => ['nullable', 'string', 'max:255'],
+            'meta.url' => ['nullable', 'url'],
+            'meta.description' => ['nullable', 'string', 'max:500'],
         ];
     }
 

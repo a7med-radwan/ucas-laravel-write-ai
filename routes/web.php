@@ -14,6 +14,10 @@ Route::group([
     'prefix' => 'dashboard/',
     'middleware' => ['auth:web', 'verified'],
 ], function () {
+    Route::put('posts/{post}/restore', [PostController::class, 'restore'])
+        ->name('posts.restore');
+    Route::delete('posts/{post}/force', [PostController::class, 'forceDelete'])
+        ->name('posts.force-delete');
     Route::resource('posts', PostController::class);
     Route::resource('categories', CategoryController::class);
 });

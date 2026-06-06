@@ -115,9 +115,9 @@
                         {{ $post->category->name }}
                     </span>
                 </div>
-                
+
                 <h1 class="font-display-lg text-display-lg mb-6 text-on-surface leading-tight">{{ $post->title }}</h1>
-                
+
                 <!-- Author Bio -->
                 <div class="flex items-center justify-between py-5 border-y border-outline-variant">
                     <div class="flex items-center gap-4">
@@ -145,7 +145,7 @@
             <!-- Cover Image Banner -->
             @if ($post->cover_image)
                 <div class="mb-10 rounded-xl overflow-hidden aspect-[16/9] w-full border border-outline-variant/30 shadow-sm">
-                    <img src="{{ $post->thumbnail_url }}" alt="{{ $post->title }}" class="w-full h-full object-cover">
+                    <img src="{{ $post->cover_image }}" alt="{{ $post->title }}" class="w-full h-full object-cover">
                 </div>
             @endif
 

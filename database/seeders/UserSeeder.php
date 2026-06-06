@@ -15,22 +15,41 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $faker = Faker::create();
-        $users = [];
-
-        for ($i = 0; $i < 15; $i++) {
-            $users[] = [
-                'name' => $faker->name,
-                'email' => $faker->unique()->safeEmail,
+        $users = [
+            [
+                'name' => 'Admin User',
+                'email' => 'admin@example.com',
                 'email_verified_at' => now(),
                 'password' => Hash::make('password'),
-                'username' => $faker->unique()->userName,
+                'username' => 'admin',
                 'timezone' => 'Asia/Gaza',
                 'status' => 'active',
                 'created_at' => now(),
                 'updated_at' => now(),
-            ];
-        }
+            ],
+            [
+                'name' => 'Editor User',
+                'email' => 'editor@example.com',
+                'email_verified_at' => now(),
+                'password' => Hash::make('password'),
+                'username' => 'editor',
+                'timezone' => 'Asia/Gaza',
+                'status' => 'active',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'Writer User',
+                'email' => 'writer@example.com',
+                'email_verified_at' => now(),
+                'password' => Hash::make('password'),
+                'username' => 'writer',
+                'timezone' => 'Asia/Gaza',
+                'status' => 'active',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ];
 
         DB::table('users')->insert($users);
     }

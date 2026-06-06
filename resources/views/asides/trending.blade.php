@@ -7,9 +7,9 @@
                 <span class="font-display-lg text-secondary opacity-30 leading-none">{{ sprintf('%02d', $index + 1) }}</span>
                 <div class="space-y-1">
                     <h4 class="font-ui-label text-ui-label font-bold text-on-surface leading-tight hover:text-primary cursor-pointer">
-                        <a href="{{ route('dashboard.posts.show', $post->id) }}">{{ $post->title }}</a>
+                        <a href="{{ route('posts.show', $post->slug) }}">{{ $post->title }}</a>
                     </h4>
-                    <p class="font-metadata text-metadata text-secondary">{{ \App\Models\Category::find($post->category_id)?->name ?? 'Uncategorized' }} • {{ $post->views ?? 0 }} views</p>
+                    <p class="font-metadata text-metadata text-secondary">{{ $post->category->name }} • {{ $post->views ?? 0 }} views</p>
                 </div>
             </div>
         @empty

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Post;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -13,20 +14,23 @@ class HomeController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $featuredPost = Post::where('status', 'published')
-            ->latest()
+        $featuredPost = Post::published()
+            ->with(['category', 'user'])
+            ->orderBy('views', 'desc')
             ->first();
 
-        $posts = Post::where('status', 'published')
+        $posts = Post::published()
+            ->with(['category', 'user'])
             ->when($featuredPost, function ($query) use ($featuredPost) {
                 $query->where('id', '!=', $featuredPost->id);
             })
-            ->latest()
+            ->orderBy('views', 'desc')
             ->paginate(5);
 
-        $categories = Category::take(5)->get();
+        $categories = Category::take(10)->get();
 
-        $trendingPosts = Post::where('status', 'published')
+        $trendingPosts = Post::published()
+            ->with(['category'])
             ->orderByDesc('views')
             ->take(3)
             ->get();

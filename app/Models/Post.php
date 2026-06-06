@@ -2,13 +2,23 @@
 
 namespace App\Models;
 
+use App\Enums\PostStatus;
+use App\Models\Scopes\OwnerScope;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
+#[ScopedBy(OwnerScope::class)]
 class Post extends Model
 {
+    use SoftDeletes;
+
     protected $connection = 'mysql';
     protected $table = 'posts';
     protected $primaryKey = 'id';
@@ -26,7 +36,44 @@ class Post extends Model
         'cover_image',
         'status',
         'views',
+        'published_at',
+        'meta',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'published_at' => 'datetime',
+            'meta' => 'json',
+            'status' => PostStatus::class,
+        ];
+    }
+
+    protected static function booted()
+    {
+        //static::addGlobalScope('owner', new OwnerScope);
+    }
+
+    public function scopePublished(Builder $builder, string|\DateTime|null $time = null)
+    {
+        $builder
+            //->withoutGlobalScope('owner')
+            ->where('status', PostStatus::Published)
+            ->where(function ($query) use ($time) {
+                $query->whereNull('published_at')
+                    ->orWhere('published_at', '<=', $time ?? now());
+            });
+    }
+
+    public function scopeStatus(Builder $builder, string|PostStatus $status)
+    {
+        $builder->where('status', $status);
+    }
+
+    public function scopeSlug(Builder $builder, string $slug)
+    {
+        $builder->where('slug', $slug);
+    }
 
     // protected $guarded = [];
 
@@ -77,6 +124,13 @@ class Post extends Model
                     ? Storage::disk('public')->url($this->cover_image)
                     : asset('images/default-thumbnail.jpg');
             }
+        );
+    }
+
+    public function publishTime(): Attribute
+    {
+        return new Attribute(
+            get: fn() => $this->published_at ?? $this->created_at,
         );
     }
 }
