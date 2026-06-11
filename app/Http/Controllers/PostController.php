@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\PostStatus;
+use App\Events\PostViewed;
 use App\Models\Post;
-use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
@@ -24,6 +23,10 @@ class PostController extends Controller
             ->published()
             ->slug($slug)
             ->firstOrFail();
+
+        // $post->increment('views');
+        // event('posts.viewed', $post);
+        event(new PostViewed($post));
 
         return view('posts.show', [
             'post' => $post,

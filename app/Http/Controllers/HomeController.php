@@ -14,27 +14,27 @@ class HomeController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $featuredPost = Post::published()
-            ->with(['category', 'user'])
-            ->orderBy('views', 'desc')
-            ->first();
+        $tag = $request->query('tag');
 
         $posts = Post::published()
             ->with(['category', 'user'])
-            ->when($featuredPost, function ($query) use ($featuredPost) {
-                $query->where('id', '!=', $featuredPost->id);
+            ->when($tag, function ($query, $tag) {
+                $query->whereHas('tags', function ($query) use ($tag) {
+                    $query->where('name', $tag)
+                        ->orWhere('slug', $tag);
+                });
             })
             ->orderBy('views', 'desc')
-            ->paginate(5);
+            ->paginate(4);
 
-        $categories = Category::take(10)->get();
+        $tags = Tag::with('posts')->get();
 
         $trendingPosts = Post::published()
-            ->with(['category'])
+            ->with(['category', 'user'])
             ->orderByDesc('views')
             ->take(3)
             ->get();
 
-        return view('home', compact('featuredPost', 'posts', 'categories', 'trendingPosts'));
+        return view('home', compact('posts', 'tags', 'trendingPosts'));
     }
 }

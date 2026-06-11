@@ -55,7 +55,7 @@ class PostController extends Controller
             ->withCount('comments')
             ->where('status', $status)
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate(3);
 
         return view('dashboard.posts.index', [
             'posts' => $posts,
@@ -208,10 +208,6 @@ class PostController extends Controller
         $post = Post::onlyTrashed()->findOrFail($id);
 
         $post->forceDelete();
-
-        if ($post->cover_image) {
-            Storage::disk('public')->delete($post->cover_image); // Delete the cover image from storage
-        }
 
         // PRG: POST Redirect GET
         return redirect()->route('dashboard.posts.index')

@@ -30,12 +30,15 @@ gap-8">
             </ul>
         </div>
         <div class="space-y-4">
-            <h3 class="font-ui-label text-ui-label uppercase tracking-widest text-secondary font-bold">Categories
+            <h3 class="font-ui-label text-ui-label uppercase tracking-widest text-secondary font-bold">Tags
             </h3>
             <div class="flex flex-wrap gap-2">
-                @foreach ($categories as $category)
-                    <a class="px-3 py-1 bg-surface-container border border-outline-variant rounded-full font-metadata text-metadata hover:bg-outline-variant transition-colors"
-                        href="#">#{{ $category->name ?? 'Unknown' }}</a>
+                @foreach ($tags as $tag)
+                    @php
+                        $isActive = request('tag') === $tag->name || request('tag') === $tag->slug;
+                    @endphp
+                    <a class="px-3 py-1 border rounded-full font-metadata text-metadata transition-colors {{ $isActive ? 'bg-primary text-white border-primary' : 'bg-surface-container border-outline-variant hover:bg-outline-variant' }}"
+                        href="{{ $isActive ? route('home') : route('home', ['tag' => $tag->name]) }}">#{{ $tag->name ?? 'Unknown' }}</a>
                 @endforeach
             </div>
         </div>
@@ -43,6 +46,9 @@ gap-8">
     <!-- Center Feed -->
     <section class="col-span-1 md:col-span-10 lg:col-span-7 space-y-12">
         <!-- Featured Article (Bento Style) -->
+        @php
+            $featuredPost = $posts->currentPage() === 1 ? $posts->shift() : null;
+        @endphp
         @if ($featuredPost)
             <article
                 class="group border border-outline-variant rounded-xl overflow-hidden bg-white hover:border-primary transition-colors duration-300">
@@ -67,17 +73,19 @@ gap-8">
                         <a href="{{ route('posts.show', $featuredPost->slug) }}">{{ $featuredPost->title }}</a>
                     </h2>
                     <p class="text-on-surface-variant font-body-md text-body-md line-clamp-3">
-                        {{ $featuredPost->excerpt ?? Str::limit(strip_tags($featuredPost->content), 150) }}</p>
+                        {{ $featuredPost->excerpt ?? Str::limit(strip_tags($featuredPost->content), 150) }}
+                    </p>
                     <div class="flex items-center justify-between pt-4 border-t border-outline-variant">
                         <div class="flex items-center gap-3">
                             <div
                                 class="w-10 h-10 rounded-full bg-surface-container border border-outline-variant overflow-hidden">
                                 <img alt="Author" class="w-full h-full object-cover"
-                                    src="https://ui-avatars.com/api/?name={{ urlencode($featuredPost->user?->name ?? 'Unknown') }}&background=random" />
+                                    src="https://ui-avatars.com/api/?name={{ $featuredPost->user->name }}&background=random" />
                             </div>
                             <div>
                                 <p class="font-ui-label text-ui-label font-bold text-on-surface">
-                                    {{ $featuredPost->user?->name ?? 'Unknown Author' }}</p>
+                                    {{ $featuredPost->user->name }}
+                                </p>
                                 <p class="font-metadata text-metadata text-secondary">Author</p>
                             </div>
                         </div>
@@ -91,21 +99,19 @@ gap-8">
         <!-- Grid of Regular Articles -->
         <div class="grid grid-cols-1 gap-12">
             @foreach ($posts as $post)
-                <x-post-card :post="$post" />
+                <x-contents.post-card :post="$post" />
             @endforeach
         </div>
-        @if($posts->hasPages())
-            <div class="pt-8 flex justify-center">
-                {{ $posts->links() }}
-            </div>
-        @endif
+
+        <div class="mt-12 pt-8 border-t border-outline-variant flex justify-center">
+            {{ $posts->withQueryString()->links('pagination.custom-tailwind') }}
+        </div>
     </section>
     <!-- Right Sidebar: Trending & Who to Follow -->
     <aside class="hidden lg:block lg:col-span-3 space-y-12">
         @include('asides.trending')
 
         <x-recommended-authors title="Top Authors" count="2" />
-
         <x-widgets.newsletter>
             <p>Enter Your email</p>
             <x-slot:helper>

@@ -41,7 +41,7 @@ class PostRequest extends FormRequest
                 'nullable',
                 'image',
                 'mimetypes:image/png,image/jpeg',
-                'dimensions:min_width=600,min_height=400,max_width=2000,max_height=2000',
+                // 'dimensions:min_width=600,min_height=400,max_width=2000,max_height=2000',
                 'max:1024'
             ],
             'category_id' => ['required', 'exists:categories,id'],

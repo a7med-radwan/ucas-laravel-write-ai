@@ -4,7 +4,9 @@ namespace App\Models;
 
 use App\Enums\PostStatus;
 use App\Models\Scopes\OwnerScope;
+use App\Observers\PostObserver;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -13,8 +15,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 #[ScopedBy(OwnerScope::class)]
+#[ObservedBy(PostObserver::class)]
 class Post extends Model
 {
     use SoftDeletes;
@@ -27,11 +31,9 @@ class Post extends Model
     public $timestamps = true;
 
     protected $fillable = [
-        'user_id',
         'category_id',
         'title',
         'content',
-        'slug',
         'excerpt',
         'cover_image',
         'status',
@@ -52,6 +54,13 @@ class Post extends Model
     protected static function booted()
     {
         //static::addGlobalScope('owner', new OwnerScope);
+
+        // creating, created, updating, updated, deleting, deleted
+        // restoring, restored, forceDeleting, forceDeleted
+        // retrieved, saving, saved
+
+        static::creating(function (Post $post) {});
+        //static::observe(new PostObserver());
     }
 
     public function scopePublished(Builder $builder, string|\DateTime|null $time = null)
@@ -132,5 +141,17 @@ class Post extends Model
         return new Attribute(
             get: fn() => $this->published_at ?? $this->created_at,
         );
+    }
+
+    public function readTime(): Attribute
+    {
+        return (new Attribute(
+            get: fn() => \ceil($this->wordCount() / 200)
+        ))->shouldCache();
+    }
+
+    public function wordCount(): int
+    {
+        return \str_word_count($this->content);
     }
 }

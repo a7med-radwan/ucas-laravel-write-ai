@@ -13,11 +13,6 @@
                 <p class="text-on-surface-variant max-w-lg font-ui-label text-ui-label">Manage your intellectual
                     output, track performance, and schedule your upcoming editorial pieces.</p>
             </div>
-            <button
-                class="bg-primary-container text-on-primary px-6 py-3 rounded-lg font-ui-button text-ui-button flex items-center gap-2 hover:opacity-90 active:scale-95 transition-all shadow-sm">
-                <span class="material-symbols-outlined text-[20px]" data-icon="edit_square">edit_square</span>
-                Create Post
-            </button>
         </div>
         <!-- Dashboard Layout Grid -->
         <div class="grid grid-cols-12 gap-8">
@@ -113,7 +108,7 @@
                                     <div class="md:col-span-6">
                                         <span
                                             class="text-metadata font-metadata text-primary mb-1 block">{{$post->category->name}}
-                                            • 8
+                                            • {{ $post->read_time }}
                                             min read</span>
                                         <h3
                                             class="font-headline-md text-[20px] leading-snug group-hover:text-primary transition-colors">
@@ -198,26 +193,7 @@
                     @endforeach
                 </div>
                 <!-- Pagination -->
-                <div class="flex items-center justify-between pt-8">
-                    <span class="text-metadata font-metadata text-on-surface-variant">Showing 1 to 10 of 42
-                        posts</span>
-                    <div class="flex gap-2">
-                        <button
-                            class="p-2 border border-outline-variant rounded-lg hover:bg-surface-container-low disabled:opacity-30"
-                            disabled="">
-                            <span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
-                        </button>
-                        <button
-                            class="h-10 w-10 border border-primary bg-primary text-on-primary rounded-lg font-ui-label">1</button>
-                        <button
-                            class="h-10 w-10 border border-outline-variant hover:bg-surface-container-low rounded-lg font-ui-label">2</button>
-                        <button
-                            class="h-10 w-10 border border-outline-variant hover:bg-surface-container-low rounded-lg font-ui-label">3</button>
-                        <button class="p-2 border border-outline-variant rounded-lg hover:bg-surface-container-low">
-                            <span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
-                        </button>
-                    </div>
-                </div>
+                {{ $posts->withQueryString()->links('pagination.custom-tailwind') }}
             </div>
         </div>
     </main>

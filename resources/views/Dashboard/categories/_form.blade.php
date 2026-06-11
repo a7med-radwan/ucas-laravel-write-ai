@@ -53,25 +53,6 @@
                     focus:outline-none focus:ring-2 focus:ring-primary/20
                     focus:border-primary transition-all">{{ old('description', $category->description) }}</textarea>
             </div>
-
-            <!-- Slug -->
-            <div>
-                <label
-                    class="block mb-2 font-ui-label text-ui-label uppercase tracking-wide text-secondary">
-                    Slug
-                </label>
-
-                <input
-                    type="text"
-                    name="slug"
-                    value="{{ old('slug', $category->slug) }}"
-                    placeholder="technology"
-                    class="w-full bg-white border border-outline-variant rounded-xl px-4 py-3
-                    text-on-surface font-body-md
-                    focus:outline-none focus:ring-2 focus:ring-primary/20
-                    focus:border-primary transition-all">
-            </div>
-
         </div>
 
         <!-- Actions -->
