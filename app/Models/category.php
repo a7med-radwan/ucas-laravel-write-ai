@@ -11,10 +11,11 @@ use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 class Category extends Model
 {
 
-    use SoftDeletes;
+    // use SoftDeletes;
     public function posts(): HasMany
     {
         return $this->hasMany(Post::class, 'category_id', 'id');
     }
+    
 
 }

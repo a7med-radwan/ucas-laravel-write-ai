@@ -26,7 +26,8 @@ class PostController extends Controller
 
         // $post->increment('views');
         // event('posts.viewed', $post);
-        event(new PostViewed($post));
+        // event(new PostViewed($post));
+        broadcast(new PostViewed($post))->toOthers();
 
         return view('posts.show', [
             'post' => $post,

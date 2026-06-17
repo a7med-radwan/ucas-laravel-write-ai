@@ -8,7 +8,9 @@
 
     <title>{{ $title }}</title>
 
+    {{--
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    --}}
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Source+Serif+4:wght@400;600;700&amp;display=swap"
         rel="stylesheet" />
@@ -18,6 +20,13 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
         rel="stylesheet" />
+
+    <script>
+        const USER_ID = "{{ auth()->id() }}"
+    </script>
+
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -96,14 +105,41 @@
                         "ui-label": ["Inter"]
                     },
                     "fontSize": {
-                        "body-lg": ["20px", { "lineHeight": "1.6", "fontWeight": "400" }],
-                        "ui-button": ["16px", { "lineHeight": "1", "letterSpacing": "0.02em", "fontWeight": "600" }],
-                        "display-lg": ["48px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }],
-                        "headline-md": ["32px", { "lineHeight": "1.3", "fontWeight": "600" }],
-                        "body-md": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
-                        "display-lg-mobile": ["32px", { "lineHeight": "1.2", "fontWeight": "700" }],
-                        "metadata": ["12px", { "lineHeight": "1.4", "fontWeight": "400" }],
-                        "ui-label": ["14px", { "lineHeight": "1.4", "letterSpacing": "0.01em", "fontWeight": "500" }]
+                        "body-lg": ["20px", {
+                            "lineHeight": "1.6",
+                            "fontWeight": "400"
+                        }],
+                        "ui-button": ["16px", {
+                            "lineHeight": "1",
+                            "letterSpacing": "0.02em",
+                            "fontWeight": "600"
+                        }],
+                        "display-lg": ["48px", {
+                            "lineHeight": "1.2",
+                            "letterSpacing": "-0.02em",
+                            "fontWeight": "700"
+                        }],
+                        "headline-md": ["32px", {
+                            "lineHeight": "1.3",
+                            "fontWeight": "600"
+                        }],
+                        "body-md": ["18px", {
+                            "lineHeight": "1.6",
+                            "fontWeight": "400"
+                        }],
+                        "display-lg-mobile": ["32px", {
+                            "lineHeight": "1.2",
+                            "fontWeight": "700"
+                        }],
+                        "metadata": ["12px", {
+                            "lineHeight": "1.4",
+                            "fontWeight": "400"
+                        }],
+                        "ui-label": ["14px", {
+                            "lineHeight": "1.4",
+                            "letterSpacing": "0.01em",
+                            "fontWeight": "500"
+                        }]
                     }
                 },
             },
@@ -122,12 +158,12 @@
                     href="{{ route('home') }}">{{ config('app.name') }}</a>
                 <nav class="hidden md:flex items-center gap-6">
                     @section('nav')
-                    <a class="text-primary font-bold border-b-2 border-primary pb-1 font-ui-label text-ui-label hover:text-primary transition-colors duration-200"
+                    <a class="text-on-surface-variant font-medium font-ui-label text-ui-label hover:text-primary transition-colors duration-200"
                         href="#">Feed</a>
                     <a class="text-on-surface-variant font-medium font-ui-label text-ui-label hover:text-primary transition-colors duration-200"
                         href="#">Authors</a>
-                    <a class="text-on-surface-variant font-medium font-ui-label text-ui-label hover:text-primary transition-colors duration-200"
-                        href="#">Dashboard</a>
+                    <a class="text-on-surface-variant font-medium font-ui-label text-ui-label {{ Route::is('home') ? 'text-primary border-b-2 border-primary' : '' }} hover:text-primary transition-colors duration-200"
+                        href="{{ route('home') }}">Home</a>
                     @show
                 </nav>
             </div>
@@ -139,10 +175,21 @@
                         placeholder="Search..." type="text" />
                 </div>
                 <div class="flex items-center gap-2">
-                    <button
-                        class="p-2 text-on-surface-variant hover:bg-surface-container-high rounded-full transition-all">
-                        <span class="material-symbols-outlined" data-icon="notifications">notifications</span>
-                    </button>
+                    @auth
+                        <a href="{{ route('dashboard.notifications.index') }}"
+                            class="relative p-2 text-on-surface-variant hover:bg-surface-container-high rounded-full transition-all inline-flex items-center">
+                            <span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+                            @if (auth()->user()->unreadNotifications()->count())
+                                <span
+                                    class="absolute -top-1 -right-1 inline-flex items-center justify-center bg-primary text-white text-[10px] rounded-full w-5 h-5">{{ auth()->user()->unreadNotifications()->count() }}</span>
+                            @endif
+                        </a>
+                    @else
+                        <a href="{{ route('login') }}"
+                            class="p-2 text-on-surface-variant hover:bg-surface-container-high rounded-full transition-all inline-flex items-center">
+                            <span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+                        </a>
+                    @endauth
                     <button
                         class="p-2 text-on-surface-variant hover:bg-surface-container-high rounded-full transition-all">
                         <span class="material-symbols-outlined" data-icon="bookmark">bookmark</span>
