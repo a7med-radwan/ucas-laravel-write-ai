@@ -19,9 +19,8 @@ class FollowNotification extends Notification
      */
     public function __construct(protected User $user, protected User $follower)
     {
-        //
+        $this->onQueue('mails');
     }
-
     /**
      * Get the notification's delivery channels.
      *
