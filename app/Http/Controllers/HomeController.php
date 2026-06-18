@@ -25,7 +25,8 @@ class HomeController extends Controller
                 });
             })
             ->orderBy('views', 'desc')
-            ->paginate(4);
+            ->paginate(4
+        );
 
         $tags = Tag::with('posts')->get();
 
