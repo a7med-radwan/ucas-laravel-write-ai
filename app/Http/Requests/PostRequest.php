@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Rules\Restricted;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use Override;
 
 class PostRequest extends FormRequest
@@ -24,8 +25,12 @@ class PostRequest extends FormRequest
      */
     public function rules(): array
     {
+        if ($this->method() == 'put') {
+        }
+        $id = $this->route('post', 0);
+
         return [
-            'title' => ['required', 'min:3', 'max:255'],
+            'title' => ['required', 'min:3', 'max:255', Rule::unique('posts', 'title')->ignore($id)],
             'content' => [
                 'required',
                 'string',
