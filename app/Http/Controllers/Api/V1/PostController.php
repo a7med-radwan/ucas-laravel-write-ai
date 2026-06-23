@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api\V1;
 use App\Enums\PostStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PostRequest;
+use App\Http\Resources\PostJsonApiResource;
+use App\Http\Resources\PostResource;
 use App\Models\Post;
 use App\Services\PostService;
 use Illuminate\Http\JsonResponse;
@@ -34,12 +36,14 @@ class PostController extends Controller implements HasMiddleware
      */
     public function index()
     {
-        return Post::published()
+        $posts = Post::published()
             ->with([
                 'category:id,name',
                 'user:id,name,username,avatar',
             ])
             ->paginate();
+
+        return $posts->toResourceCollection();
     }
 
     /**
@@ -81,7 +85,9 @@ class PostController extends Controller implements HasMiddleware
         if ($post->status !== PostStatus::Published) {
             //abort(404);
         }
-        return $post->load(['category:id,name', 'user:id,name,username,avatar']);
+        $post->load(['category:id,name', 'user:id,name,username,avatar']);
+
+        return $post->toResource(PostJsonApiResource::class);
     }
 
     /**

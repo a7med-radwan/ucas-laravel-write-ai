@@ -160,8 +160,10 @@
                     @section('nav')
                     <a class="text-on-surface-variant font-medium font-ui-label text-ui-label hover:text-primary transition-colors duration-200"
                         href="#">Feed</a>
-                    <a class="text-on-surface-variant font-medium font-ui-label text-ui-label hover:text-primary transition-colors duration-200"
-                        href="#">Authors</a>
+                    @can('view-any', App\Models\User::class)
+                        <a class="text-on-surface-variant font-medium font-ui-label text-ui-label hover:text-primary transition-colors duration-200"
+                            href="#">Authors</a>
+                    @endcan
                     <a class="text-on-surface-variant font-medium font-ui-label text-ui-label {{ Route::is('home') ? 'text-primary border-b-2 border-primary' : '' }} hover:text-primary transition-colors duration-200"
                         href="{{ route('home') }}">Home</a>
                     @show

@@ -40,7 +40,7 @@ class AccessTokenController extends Controller
 
         return Response::json([
             'token' => $token->plainTextToken,
-            'user' => $user,
+            'user' => $user->append('avatar_url'),
         ], 201);
     }
 

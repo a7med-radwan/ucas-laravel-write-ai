@@ -3,29 +3,27 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Models\Post;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Prunable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
-
+use Override;
 
 #[Fillable(['name', 'email', 'password'])]
-#[Hidden(['password', 'remember_token'])]
+#[Hidden(['password', 'remember_token', 'two_factor_secret', 'two_factor_recovery_codes', 'two_factor_confirmed_at'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
-    use Prunable;
     use HasApiTokens;
+
     /**
      * Get the attributes that should be cast.
      *
@@ -62,6 +60,11 @@ class User extends Authenticatable
             ]);
     }
 
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
     public function avatarUrl(): Attribute
     {
         return new Attribute(
@@ -77,5 +80,15 @@ class User extends Authenticatable
     public function receivesBroadcastNotificationsOn()
     {
         return 'App.Models.User.' . $this->id;
+    }
+
+    public function hasAbility(string $ability): bool
+    {
+        foreach ($this->roles as $role) {
+            if (in_array($ability, $role->abilities)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

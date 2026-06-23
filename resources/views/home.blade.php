@@ -62,7 +62,7 @@ gap-8">
                         <span
                             class="bg-primary-container text-on-primary px-2 py-0.5 rounded font-bold uppercase tracking-wider">Featured</span>
                         <span>•</span>
-                        <span>{{ $featuredPost->publishTime->format('M d, Y') }}</span>
+                        <span>{{ $featuredPost->publish_time->format('M d, Y') }}</span>
                         <span>•</span>
                         <span>{{ $featuredPost->category->name }}</span>
                         <span>•</span>

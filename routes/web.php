@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\AdminDashboard\UserController;
 use App\Http\Controllers\Dashboard\CategoryController;
 use App\Http\Controllers\Dashboard\NotificationController;
 use App\Http\Controllers\Dashboard\PostController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\HomeController;
+use App\Http\Middleware\EnsureUserType;
 use Illuminate\Support\Facades\Route;
 
 
@@ -48,3 +50,6 @@ Route::group([
     });
 
 });
+
+Route::resource('admin/users', UserController::class)
+    ->middleware(['auth', 'type:super-admin,admin', 'can:update']);

@@ -3,25 +3,32 @@
 namespace App\Models;
 
 use App\Enums\PostStatus;
+use App\Http\Resources\PostResource;
 use App\Models\Scopes\OwnerScope;
 use App\Observers\PostObserver;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Attributes\Appends;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
+use Illuminate\Database\Eloquent\Attributes\UseResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Prunable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
+#[Appends(['read_time'])]
 #[ScopedBy(OwnerScope::class)]
 #[ObservedBy(PostObserver::class)]
+#[UseResource(PostResource::class)]
 class Post extends Model
 {
     use SoftDeletes;
+    use Prunable;
 
     protected $connection = 'mysql';
     protected $table = 'posts';
@@ -40,6 +47,17 @@ class Post extends Model
         'views',
         'published_at',
         'meta',
+    ];
+
+    protected $hidden = [
+        'status',
+        'deleted_at',
+    ];
+
+    protected $appends = [
+        'thumbnail_url',
+        'publish_time',
+
     ];
 
     protected function casts(): array
@@ -125,6 +143,12 @@ class Post extends Model
         );
     }
 
+    // public function setTitleAttribute($value)
+    // {
+    //     $this->attributes['title'] = strip_tags($value);
+    // }
+
+    // $post->thumbnail_url
     public function thumbnailUrl(): Attribute
     {
         return new Attribute(
@@ -136,6 +160,7 @@ class Post extends Model
         );
     }
 
+    // $post->publish_time
     public function publishTime(): Attribute
     {
         return new Attribute(
@@ -143,11 +168,17 @@ class Post extends Model
         );
     }
 
-    public function readTime(): Attribute
+    // $post->read_time
+    // public function readTime(): Attribute
+    // {
+    //     return (new Attribute(
+    //         get: fn() => \ceil($this->wordCount() / 200)
+    //     ))->shouldCache();
+    // }
+
+    public function getReadTimeAttribute()
     {
-        return (new Attribute(
-            get: fn() => \ceil($this->wordCount() / 200)
-        ))->shouldCache();
+        return  \ceil($this->wordCount() / 200);
     }
 
     public function wordCount(): int

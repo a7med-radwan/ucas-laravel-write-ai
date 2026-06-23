@@ -11,6 +11,10 @@ Route::post('auth/access-tokens', [AccessTokenController::class, 'store'])
 Route::delete('auth/access-tokens/{token?}', [AccessTokenController::class, 'destroy'])
     ->middleware('auth:sanctum');
 
+Route::group([
+    'as' => 'api.',
+], function () {
+    Route::apiResource('posts', PostController::class)
+        ->middlewareFor(['store', 'update', 'destroy'], ['auth:sanctum']);
 
-Route::apiResource('posts', PostController::class)
-    ->middlewareFor(['store', 'update', 'destroy'], ['auth:sanctum']);
+});
