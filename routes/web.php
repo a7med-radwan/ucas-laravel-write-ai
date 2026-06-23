@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminDashboard\RoleController;
 use App\Http\Controllers\AdminDashboard\UserController;
 use App\Http\Controllers\Dashboard\CategoryController;
 use App\Http\Controllers\Dashboard\NotificationController;
@@ -28,7 +29,7 @@ Route::delete('users/{user}/unfollow', [FollowController::class, 'destroy'])
 Route::group([
     'as' => 'dashboard.',
     'prefix' => 'dashboard/',
-    'middleware' => ['auth:web', 'verified'],
+    'middleware' => ['auth:web', 'verified', 'active'],
 ], function () {
     Route::put('posts/{post}/restore', [PostController::class, 'restore'])
         ->name('posts.restore');
@@ -51,5 +52,11 @@ Route::group([
 
 });
 
-Route::resource('admin/users', UserController::class)
-    ->middleware(['auth', 'type:super-admin,admin', 'can:update']);
+Route::group([
+    'as' => 'admin.',
+    'prefix' => 'admin/',
+    'middleware' => ['auth', 'type:super-admin,admin', 'active'],
+], function () {
+    Route::resource('roles', RoleController::class)->except(['show']);
+    Route::resource('users', UserController::class);
+});

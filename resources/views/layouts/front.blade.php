@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html class="light" lang="en">
+<html class="light h-full" lang="en">
 
 <head>
     <meta charset="utf-8" />
@@ -8,14 +8,8 @@
 
     <title>{{ $title }}</title>
 
-    {{--
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    --}}
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Source+Serif+4:wght@400;600;700&amp;display=swap"
-        rel="stylesheet" />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
         rel="stylesheet" />
     <link
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
@@ -92,7 +86,8 @@
                         "container-max": "1200px",
                         "gutter": "1.5rem",
                         "article-max": "720px",
-                        "section-gap": "4rem"
+                        "section-gap": "4rem",
+                        "sidebar": "260px"
                     },
                     "fontFamily": {
                         "body-lg": ["Source Serif 4"],
@@ -105,41 +100,14 @@
                         "ui-label": ["Inter"]
                     },
                     "fontSize": {
-                        "body-lg": ["20px", {
-                            "lineHeight": "1.6",
-                            "fontWeight": "400"
-                        }],
-                        "ui-button": ["16px", {
-                            "lineHeight": "1",
-                            "letterSpacing": "0.02em",
-                            "fontWeight": "600"
-                        }],
-                        "display-lg": ["48px", {
-                            "lineHeight": "1.2",
-                            "letterSpacing": "-0.02em",
-                            "fontWeight": "700"
-                        }],
-                        "headline-md": ["32px", {
-                            "lineHeight": "1.3",
-                            "fontWeight": "600"
-                        }],
-                        "body-md": ["18px", {
-                            "lineHeight": "1.6",
-                            "fontWeight": "400"
-                        }],
-                        "display-lg-mobile": ["32px", {
-                            "lineHeight": "1.2",
-                            "fontWeight": "700"
-                        }],
-                        "metadata": ["12px", {
-                            "lineHeight": "1.4",
-                            "fontWeight": "400"
-                        }],
-                        "ui-label": ["14px", {
-                            "lineHeight": "1.4",
-                            "letterSpacing": "0.01em",
-                            "fontWeight": "500"
-                        }]
+                        "body-lg": ["20px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "ui-button": ["16px", { "lineHeight": "1", "letterSpacing": "0.02em", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-md": ["32px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "body-md": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "display-lg-mobile": ["32px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "metadata": ["12px", { "lineHeight": "1.4", "fontWeight": "400" }],
+                        "ui-label": ["14px", { "lineHeight": "1.4", "letterSpacing": "0.01em", "fontWeight": "500" }]
                     }
                 },
             },
@@ -149,93 +117,130 @@
     {{ $headScripts ?? '' }}
 </head>
 
-<body class="font-body-md text-body-md selection:bg-primary-fixed selection:text-on-primary-fixed">
-    <!-- TopNavBar -->
-    <header class="fixed top-0 z-50 w-full bg-surface border-b border-outline-variant">
-        <div class="flex justify-between items-center w-full px-gutter max-w-container-max mx-auto h-16">
-            <div class="flex items-center gap-8">
-                <a class="font-display-lg-mobile text-display-lg-mobile font-bold text-on-surface"
-                    href="{{ route('home') }}">{{ config('app.name') }}</a>
-                <nav class="hidden md:flex items-center gap-6">
-                    @section('nav')
-                    <a class="text-on-surface-variant font-medium font-ui-label text-ui-label hover:text-primary transition-colors duration-200"
-                        href="#">Feed</a>
-                    @can('view-any', App\Models\User::class)
-                        <a class="text-on-surface-variant font-medium font-ui-label text-ui-label hover:text-primary transition-colors duration-200"
-                            href="#">Authors</a>
-                    @endcan
-                    <a class="text-on-surface-variant font-medium font-ui-label text-ui-label {{ Route::is('home') ? 'text-primary border-b-2 border-primary' : '' }} hover:text-primary transition-colors duration-200"
-                        href="{{ route('home') }}">Home</a>
-                    @show
-                </nav>
-            </div>
-            <div class="flex items-center gap-4">
-                <div
-                    class="hidden lg:flex items-center bg-surface-container border border-outline-variant rounded-full px-4 py-1.5 gap-2">
-                    <span class="material-symbols-outlined text-secondary" data-icon="search">search</span>
-                    <input class="bg-transparent border-none focus:ring-0 text-ui-label font-ui-label w-48"
-                        placeholder="Search..." type="text" />
-                </div>
-                <div class="flex items-center gap-2">
-                    @auth
-                        <a href="{{ route('dashboard.notifications.index') }}"
-                            class="relative p-2 text-on-surface-variant hover:bg-surface-container-high rounded-full transition-all inline-flex items-center">
-                            <span class="material-symbols-outlined" data-icon="notifications">notifications</span>
-                            @if (auth()->user()->unreadNotifications()->count())
-                                <span
-                                    class="absolute -top-1 -right-1 inline-flex items-center justify-center bg-primary text-white text-[10px] rounded-full w-5 h-5">{{ auth()->user()->unreadNotifications()->count() }}</span>
-                            @endif
-                        </a>
-                    @else
-                        <a href="{{ route('login') }}"
-                            class="p-2 text-on-surface-variant hover:bg-surface-container-high rounded-full transition-all inline-flex items-center">
-                            <span class="material-symbols-outlined" data-icon="notifications">notifications</span>
-                        </a>
-                    @endauth
-                    <button
-                        class="p-2 text-on-surface-variant hover:bg-surface-container-high rounded-full transition-all">
-                        <span class="material-symbols-outlined" data-icon="bookmark">bookmark</span>
-                    </button>
-                    <x-user-menu />
-                </div>
-            </div>
+<body class="font-body-md text-body-md selection:bg-primary-fixed selection:text-on-primary-fixed bg-surface min-h-dvh {{ $mainClass ?? '' }}">
+
+    <!-- Sidebar (fixed — does not affect page scroll) -->
+    <aside class="app-sidebar hidden md:flex fixed inset-y-0 left-0 z-40 w-sidebar flex-col bg-surface-container-lowest border-r border-outline-variant">
+        <div class="h-16 shrink-0 flex items-center px-5 border-b border-outline-variant">
+            <a class="font-display-lg-mobile text-[22px] font-bold text-on-surface truncate" href="{{ route('home') }}">
+                {{ config('app.name') }}
+            </a>
         </div>
-    </header>
-    <!-- Main Content Layout -->
-    <main class="{{ $mainClass ?? '' }}">
-        {{ $slot }}
-    </main>
-    <!-- Footer -->
-    <footer class="bg-surface border-t border-outline-variant">
-        <div
-            class="w-full py-section-gap px-gutter max-w-container-max mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex flex-col gap-2 items-center md:items-start">
-                <span class="font-headline-md text-headline-md text-on-surface">Ink &amp; Paper</span>
-                <p class="font-metadata text-metadata text-secondary">© 2024 Ink &amp; Paper Platform. All rights
-                    reserved.</p>
+
+        <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-5">
+            <div class="space-y-0.5">
+                <span class="px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-outline block">Discover</span>
+                <a href="{{ route('home') }}"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors {{ request()->routeIs('home') ? 'bg-primary-fixed text-on-primary-fixed font-bold' : 'text-on-surface-variant font-medium hover:bg-surface-container hover:text-on-surface' }}">
+                    <span class="material-symbols-outlined text-[22px]">home</span>
+                    Home
+                </a>
+                <!-- <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant font-medium hover:bg-surface-container hover:text-on-surface transition-colors">
+                    <span class="material-symbols-outlined text-[22px]">dynamic_feed</span>
+                    Feed
+                </a>
+                @can('view-any', App\Models\User::class)
+                    <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant font-medium hover:bg-surface-container hover:text-on-surface transition-colors">
+                        <span class="material-symbols-outlined text-[22px]">group</span>
+                        Authors
+                    </a>
+                @endcan -->
             </div>
-            <nav class="flex flex-wrap justify-center gap-8">
-                <a class="text-secondary font-metadata text-metadata hover:text-on-surface underline transition-all"
-                    href="#">About</a>
-                <a class="text-secondary font-metadata text-metadata hover:text-on-surface underline transition-all"
-                    href="#">Privacy</a>
-                <a class="text-secondary font-metadata text-metadata hover:text-on-surface underline transition-all"
-                    href="#">Terms</a>
-                <a class="text-secondary font-metadata text-metadata hover:text-on-surface underline transition-all"
-                    href="#">API</a>
-                <a class="text-secondary font-metadata text-metadata hover:text-on-surface underline transition-all"
-                    href="#">Help</a>
-            </nav>
-            <div class="flex gap-4">
-                <button
-                    class="p-2 text-secondary hover:text-primary transition-colors focus:outline-none ring-primary"><span
-                        class="material-symbols-outlined">alternate_email</span></button>
-                <button
-                    class="p-2 text-secondary hover:text-primary transition-colors focus:outline-none ring-primary"><span
-                        class="material-symbols-outlined">rss_feed</span></button>
-            </div>
+
+            @auth
+                <div class="space-y-0.5">
+                    <span class="px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-outline block">Workspace</span>
+                    <a href="{{ route('dashboard.posts.index') }}"
+                        class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors {{ request()->routeIs('dashboard.posts.*') ? 'bg-primary-fixed text-on-primary-fixed font-bold' : 'text-on-surface-variant font-medium hover:bg-surface-container hover:text-on-surface' }}">
+                        <span class="material-symbols-outlined text-[22px]">article</span>
+                        Posts
+                    </a>
+                    <a href="{{ route('dashboard.categories.index') }}"
+                        class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors {{ request()->routeIs('dashboard.categories.*') ? 'bg-primary-fixed text-on-primary-fixed font-bold' : 'text-on-surface-variant font-medium hover:bg-surface-container hover:text-on-surface' }}">
+                        <span class="material-symbols-outlined text-[22px]">category</span>
+                        Categories
+                    </a>
+                    <a href="{{ route('dashboard.notifications.index') }}"
+                        class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors {{ request()->routeIs('dashboard.notifications.*') ? 'bg-primary-fixed text-on-primary-fixed font-bold' : 'text-on-surface-variant font-medium hover:bg-surface-container hover:text-on-surface' }}">
+                        <span class="material-symbols-outlined text-[22px]">notifications</span>
+                        Notifications
+                        @if (auth()->user()->unreadNotifications()->count())
+                            <span class="ml-auto inline-flex items-center justify-center bg-primary text-on-primary text-[10px] font-bold rounded-full min-w-[18px] h-[18px] px-1">
+                                {{ auth()->user()->unreadNotifications()->count() }}
+                            </span>
+                        @endif
+                    </a>
+                </div>
+
+                @if (in_array(auth()->user()->type, ['admin', 'super-admin']))
+                    <div class="space-y-0.5 pt-3 border-t border-outline-variant/60">
+                        <span class="px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-outline block">Administration</span>
+                        <a href="{{ route('admin.users.index') }}"
+                            class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors {{ request()->routeIs('admin.users.*') ? 'bg-primary-fixed text-on-primary-fixed font-bold' : 'text-on-surface-variant font-medium hover:bg-surface-container hover:text-on-surface' }}">
+                            <span class="material-symbols-outlined text-[22px]">manage_accounts</span>
+                            Users
+                        </a>
+                        <a href="{{ route('admin.roles.index') }}"
+                            class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors {{ request()->routeIs('admin.roles.*') ? 'bg-primary-fixed text-on-primary-fixed font-bold' : 'text-on-surface-variant font-medium hover:bg-surface-container hover:text-on-surface' }}">
+                            <span class="material-symbols-outlined text-[22px]">admin_panel_settings</span>
+                            Roles
+                        </a>
+                    </div>
+                @endif
+
+                <a href="{{ route('dashboard.posts.create') }}"
+                    class="flex items-center justify-center gap-2 mx-1 mt-2 px-4 py-2.5 rounded-lg bg-primary text-on-primary font-ui-button text-ui-button shadow-sm hover:opacity-90 transition-all">
+                    <span class="material-symbols-outlined text-[20px]">add</span>
+                    Create Post
+                </a>
+            @endauth
+        </nav>
+
+        <div class="shrink-0 p-3 border-t border-outline-variant space-y-2">
+            <x-user-menu variant="sidebar" />
         </div>
-    </footer>
+    </aside>
+
+    <!-- Page content (natural browser scroll) -->
+    <div class="app-content md:pl-sidebar min-h-dvh flex flex-col">
+        <header class="md:hidden sticky top-0 z-30 h-14 flex items-center justify-between px-4 border-b border-outline-variant bg-surface-container-lowest/95 backdrop-blur-sm">
+            <a class="font-display-lg-mobile text-[20px] font-bold text-on-surface truncate" href="{{ route('home') }}">
+                {{ config('app.name') }}
+            </a>
+            <div class="flex items-center gap-0.5">
+                @auth
+                    <a href="{{ route('dashboard.notifications.index') }}" class="relative p-2 text-on-surface-variant rounded-lg">
+                        <span class="material-symbols-outlined text-[22px]">notifications</span>
+                        @if (auth()->user()->unreadNotifications()->count())
+                            <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-full"></span>
+                        @endif
+                    </a>
+                @endauth
+                <x-user-menu variant="compact" />
+            </div>
+        </header>
+
+        <main class="flex-1 w-full max-w-full">
+            {{ $slot }}
+
+            @unless (request()->routeIs('dashboard.*', 'admin.*'))
+                <footer class="bg-surface border-t border-outline-variant mt-16">
+                    <div class="w-full py-10 px-gutter max-w-container-max mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+                        <div class="flex flex-col gap-1 items-center md:items-start">
+                            <span class="font-headline-md text-headline-md text-on-surface">{{ config('app.name') }}</span>
+                            <p class="font-metadata text-metadata text-secondary">© {{ date('Y') }} {{ config('app.name') }}. All rights reserved.</p>
+                        </div>
+                        <nav class="flex flex-wrap justify-center gap-6">
+                            <a class="text-secondary font-metadata text-metadata hover:text-on-surface transition-colors" href="#">About</a>
+                            <a class="text-secondary font-metadata text-metadata hover:text-on-surface transition-colors" href="#">Privacy</a>
+                            <a class="text-secondary font-metadata text-metadata hover:text-on-surface transition-colors" href="#">Terms</a>
+                            <a class="text-secondary font-metadata text-metadata hover:text-on-surface transition-colors" href="#">Help</a>
+                        </nav>
+                    </div>
+                </footer>
+            @endunless
+        </main>
+    </div>
 </body>
 
 </html>

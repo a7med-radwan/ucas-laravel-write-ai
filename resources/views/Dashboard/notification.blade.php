@@ -1,12 +1,9 @@
 <x-layout title="Notifications">
-
-    <main class="pt-24 max-w-article-max mx-auto px-margin-mobile md:px-0 mt-12 mb-section-gap">
-        <!-- Page Header -->
-        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-            <div>
-                <h1 class="font-headline-md text-headline-md text-on-surface mb-2">Notifications</h1>
-                <p class="font-metadata text-metadata text-secondary">Stay updated with your latest interactions and
-                    community activity.</p>
+    <div class="pt-8 pb-section-gap px-gutter max-w-container-max mx-auto">
+        <header class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
+            <div class="max-w-2xl">
+                <h1 class="font-display-lg text-display-lg-mobile sm:text-display-lg text-on-surface mb-1.5">Notifications</h1>
+                <p class="font-body-md text-on-surface-variant">Stay updated with your latest interactions and community activity.</p>
             </div>
             <form action="{{ route('dashboard.notifications.mark-all-read') }}" method="post">
                 @csrf
@@ -16,7 +13,7 @@
                     Mark all as read
                 </button>
             </form>
-        </div>
+        </header>
         <!-- Filter Tabs -->
         <div class="flex items-center gap-6 border-b border-outline-variant mb-10 overflow-x-auto no-scrollbar">
             <button
@@ -77,6 +74,5 @@
             <span class="material-symbols-outlined text-secondary mb-2" data-icon="history_edu">history_edu</span>
             <p class="font-metadata text-metadata text-secondary">You're all caught up for the week.</p>
         </div>
-    </main>
-
+    </div>
 </x-layout>

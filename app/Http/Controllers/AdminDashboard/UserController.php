@@ -21,8 +21,8 @@ class UserController extends Controller
         // if (Gate::denies('users.view')) {
         //     abort(403);
         // }
-        $user = Auth::user();
-        abort_if(!$user->can('view-any', User::class), 403);
+        // $user = Auth::user();
+        // abort_if(!$user->can('view-any', User::class), 403);
 
         echo 'Admin Dashboard';
     }

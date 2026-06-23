@@ -1,12 +1,12 @@
 @props(['post'])
 
-<article class="flex flex-col md:flex-row gap-8 group">
-    <div class="w-full md:w-1/3 aspect-video md:aspect-square overflow-hidden rounded-lg border border-outline-variant">
+<article class="flex flex-col sm:flex-row gap-6 group pb-10 border-b border-outline-variant last:border-0 last:pb-0">
+    <div class="w-full sm:w-[220px] lg:w-[260px] shrink-0 aspect-video sm:aspect-square overflow-hidden rounded-xl border border-outline-variant">
         <img alt="{{ $post->title }}"
             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
             src="{{ $post->cover_image ?? 'https://images.unsplash.com/photo-1501504905252-473c47e087f8?q=80&w=1974&auto=format&fit=crop' }}" />
     </div>
-    <div class="w-full md:w-2/3 space-y-3">
+    <div class="flex-1 min-w-0 space-y-2">
         <div class="flex items-center gap-2 font-metadata text-metadata text-secondary">
             <span class="text-primary font-bold">{{ $post->category->name }}</span>
             <span>•</span>

@@ -109,8 +109,8 @@
         </style>
     </x-slot:style>
 
-    <main class="pt-24 pb-section-gap">
-        <article class="mx-auto article-column px-margin-mobile md:px-0">
+    <div class="pt-6 md:pt-8 pb-section-gap px-gutter">
+        <article class="mx-auto max-w-article-max">
             <!-- Headline -->
             <header class="mb-8">
                 <!-- Category Tag -->
@@ -165,7 +165,7 @@
                 {!! $post->content !!}
             </div>
         </article>
-    </main>
+    </div>
 
     <!-- Floating Engagement Bar -->
     <div class="fixed bottom-10 left-1/2 -translate-x-1/2 z-40">

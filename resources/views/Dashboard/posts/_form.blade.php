@@ -7,7 +7,7 @@
     @csrf
     @method($method ?? 'POST')
 
-    <main class="pt-24 pb-32 flex flex-col lg:flex-row max-w-container-max mx-auto px-gutter gap-12">
+    <div class="pt-8 pb-16 flex flex-col lg:flex-row max-w-container-max mx-auto px-gutter gap-10">
 
         <!-- Editor Canvas -->
         <div class="flex-1 max-w-article-max mx-auto w-full">
@@ -219,7 +219,7 @@
             </div>
         </aside>
 
-    </main>
+    </div>
 </form>
 
 <script>

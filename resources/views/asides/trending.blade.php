@@ -1,6 +1,6 @@
 <!-- Trending Section -->
-<div class="bg-white border border-outline-variant rounded-xl p-6 space-y-6">
-    <h3 class="font-headline-md text-[20px] text-on-surface">Trending on Ink</h3>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 space-y-5">
+    <h3 class="font-headline-md text-lg text-on-surface font-bold">Trending</h3>
     <div class="space-y-6">
         @forelse ($trendingPosts ?? [] as $index => $post)
             <div class="flex gap-4">

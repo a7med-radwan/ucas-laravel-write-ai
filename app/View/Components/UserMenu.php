@@ -12,13 +12,15 @@ class UserMenu extends Component
 {
     public $user;
 
+    public string $variant;
+
     /**
      * Create a new component instance.
      */
-    public function __construct(Request $request)
+    public function __construct(Request $request, string $variant = 'sidebar')
     {
         $this->user = Auth::user();
-        // $this->user = $request->user();
+        $this->variant = $variant;
     }
 
     /**
