@@ -10,7 +10,7 @@ class UserPolicy
 
     public function before($user, $ability)
     {
-        if ($user->type == 'super-admin') {
+        if ($user->hasRole('Super Admin')) {
             return true;
         }
     }
@@ -52,7 +52,7 @@ class UserPolicy
      */
     public function delete(User $user, User $model): bool
     {
-        return $user->hasAbility('users.delete') && $model->owner_id == $user->id;
+        return $user->hasAbility('users.delete');
     }
 
     /**
@@ -71,8 +71,4 @@ class UserPolicy
         return $user->hasAbility('users.delete');
     }
 
-    public function export(User $user, User $model): bool
-    {
-        return $user->hasAbility('users.export');
-    }
 }

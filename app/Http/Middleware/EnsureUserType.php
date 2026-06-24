@@ -10,20 +10,18 @@ class EnsureUserType
 {
     /**
      * Handle an incoming request.
+     * Accepts role names: e.g. middleware('role:Super Admin,Manager')
      *
      * @param  Closure(Request): (Response)  $next
      */
-    public function handle(Request $request, Closure $next, ...$types): Response
+    public function handle(Request $request, Closure $next, string ...$types): Response
     {
         $user = $request->user();
-        if (! in_array($user->type, $types)) {
+
+        if (! $user || ! in_array($user->type, $types)) {
             abort(403);
         }
 
-        $response = $next($request);
-
-        //$response->headers->set('x-custom', 'ssss');
-
-        return $response;
+        return $next($request);
     }
 }

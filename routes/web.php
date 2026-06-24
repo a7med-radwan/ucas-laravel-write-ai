@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/posts/{slug}', [\App\Http\Controllers\PostController::class, 'show'])
     ->name('posts.show');
 Route::get('/', HomeController::class)->name('home');
-Route::get('/u/{username}', function () {})
+Route::get('/u/{username}', function () { })
     ->name('users.profile');
 
 Route::post('users/{user}/follow', [FollowController::class, 'store'])
@@ -36,9 +36,10 @@ Route::group([
     Route::delete('posts/{post}/force', [PostController::class, 'forceDelete'])
         ->name('posts.force-delete');
     Route::resource('posts', PostController::class);
-    Route::resource('categories', CategoryController::class);
 
-        Route::group([
+    Route::resource('categories', CategoryController::class)->middleware('type:super-admin,admin');
+
+    Route::group([
         'as' => 'notifications.',
         'prefix' => 'notifications/',
         'controller' => NotificationController::class,
@@ -55,8 +56,8 @@ Route::group([
 Route::group([
     'as' => 'admin.',
     'prefix' => 'admin/',
-    'middleware' => ['auth', 'type:super-admin,admin', 'active'],
+    'middleware' => ['auth', 'active'],
 ], function () {
-    Route::resource('roles', RoleController::class)->except(['show']);
+    Route::resource('roles', RoleController::class)->except(['show'])->middleware('type:super-admin');
     Route::resource('users', UserController::class);
 });

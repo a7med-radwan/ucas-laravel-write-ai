@@ -91,4 +91,9 @@ class User extends Authenticatable
         }
         return false;
     }
+
+    public function hasRole(string ...$roleNames): bool
+    {
+        return $this->roles->whereIn('name', $roleNames)->isNotEmpty();
+    }
 }
