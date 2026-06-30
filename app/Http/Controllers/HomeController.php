@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
 use Illuminate\Http\Request;
@@ -26,7 +25,7 @@ class HomeController extends Controller
             })
             ->orderBy('views', 'desc')
             ->paginate(4
-        );
+            );
 
         $tags = Tag::with('posts')->get();
 

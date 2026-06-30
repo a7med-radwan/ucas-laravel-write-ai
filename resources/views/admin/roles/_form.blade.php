@@ -3,7 +3,8 @@
     @csrf
     @method($method ?? 'POST')
 
-    <a href="{{ route('admin.roles.index') }}" class="inline-flex items-center gap-1.5 text-on-surface-variant hover:text-primary font-ui-label text-ui-label mb-6 transition-colors">
+    <a href="{{ route('admin.roles.index') }}"
+        class="inline-flex items-center gap-1.5 text-on-surface-variant hover:text-primary font-ui-label text-ui-label mb-6 transition-colors">
         <span class="material-symbols-outlined text-[18px]">arrow_back</span>
         Back to Roles
     </a>
@@ -12,7 +13,7 @@
 
         <!-- Header -->
         <div class="mb-8">
-            <h2 class="font-display-lg text-display-lg text-on-surface">
+            <h2 class="font-display-lg-mobile text-[22px] font-bold text-on-surface truncate">
                 {{ isset($role->id) ? 'Edit Role' : 'Create Role' }}
             </h2>
             <p class="text-secondary font-body-md mt-2">
@@ -39,8 +40,7 @@
                     Role Name
                 </label>
                 <input type="text" name="name" value="{{ old('name', $role->name) }}"
-                    placeholder="e.g. Editor, Moderator, Content Manager"
-                    class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-2.5
+                    placeholder="e.g. Editor, Moderator, Content Manager" class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-2.5
                     text-on-surface font-ui-label text-ui-label
                     focus:outline-none focus:ring-2 focus:ring-primary/20
                     focus:border-primary transition-all">
@@ -63,14 +63,12 @@
                     @foreach ($abilities as $key => $label)
                         <label
                             class="flex items-center gap-3 p-3 rounded-xl border border-outline-variant hover:border-primary hover:bg-surface-container-low cursor-pointer transition-all group">
-                            <input type="checkbox" name="abilities[]" value="{{ $key }}"
-                                {{ in_array($key, old('abilities', $role->abilities ?? [])) ? 'checked' : '' }}
+                            <input type="checkbox" name="abilities[]" value="{{ $key }}" {{ in_array($key, old('abilities', $role->abilities ?? [])) ? 'checked' : '' }}
                                 class="w-4 h-4 rounded border-outline text-primary focus:ring-primary">
                             <div>
                                 <span
                                     class="font-ui-label text-ui-label text-on-surface group-hover:text-primary transition-colors">{{ $label }}</span>
-                                <span
-                                    class="block font-metadata text-metadata text-on-surface-variant">{{ $key }}</span>
+                                <span class="block font-metadata text-metadata text-on-surface-variant">{{ $key }}</span>
                             </div>
                         </label>
                     @endforeach
@@ -80,14 +78,12 @@
 
         <!-- Actions -->
         <div class="flex items-center justify-end gap-3 mt-10">
-            <a href="{{ route('admin.roles.index') }}"
-                class="px-5 py-2.5 rounded-lg border border-outline-variant
+            <a href="{{ route('admin.roles.index') }}" class="px-5 py-2.5 rounded-lg border border-outline-variant
                 text-on-surface-variant font-ui-label text-ui-label hover:bg-surface-container transition-colors">
                 Cancel
             </a>
 
-            <button type="submit"
-                class="bg-primary text-on-primary px-6 py-2.5 rounded-lg
+            <button type="submit" class="bg-primary text-on-primary px-6 py-2.5 rounded-lg
                 font-ui-label text-ui-label
                 hover:opacity-90 transition-all shadow-sm">
                 {{ isset($role->id) ? 'Update Role' : 'Create Role' }}

@@ -14,6 +14,27 @@
 
                 <!-- Feed -->
                 <section class="lg:col-span-8 space-y-8">
+                    <!-- Search -->
+                    <form action="{{ route('search') }}" method="GET" class="flex items-center gap-2 max-w-lg">
+                        <div class="relative flex-1">
+                            <input
+                                type="text"
+                                name="search"
+                                value="{{ request('search') }}"
+                                placeholder=" Search posts by title or content..."
+                                autocomplete="off"
+                                class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl py-2.5 pl-11 pr-4 text-sm text-on-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
+                            >
+                        </div>
+                        <button
+                            type="submit"
+                            class="shrink-0 bg-primary text-on-primary px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-primary/90 active:scale-95 transition-all flex items-center gap-1.5"
+                        >
+                            <span class="material-symbols-outlined" style="font-size:18px;">search</span>
+                            <span>Search</span>
+                        </button>
+                    </form>
+
                     @if ($tags->isNotEmpty())
                         <div class="space-y-2">
                             <h2 class="font-ui-label text-ui-label uppercase tracking-widest text-secondary font-bold">Tags</h2>
@@ -91,13 +112,15 @@
                 <!-- Right sidebar -->
                 <aside class="lg:col-span-4 space-y-6">
                     @include('asides.trending')
-                    <x-recommended-authors title="Top Authors" count="2" />
+                    <x-recommended-authors title="Top Authors" count="5" />
+                    {{--
                     <x-widgets.newsletter>
                         <p>Enter your email</p>
                         <x-slot:helper>
                             <p class="font-metadata text-metadata text-on-primary-container">We care about your privacy. Unsubscribe anytime.</p>
                         </x-slot:helper>
-                    </x-widgets.newsletter>
+                    </x-widgets.newsletter> 
+                    --}}
                 </aside>
             </div>
         </div>

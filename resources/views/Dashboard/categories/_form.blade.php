@@ -12,7 +12,7 @@
 
         <!-- Header -->
         <div class="mb-8">
-            <h2 class="font-display-lg text-display-lg text-on-surface ">
+            <h2 class="font-display-lg-mobile text-[22px] font-bold text-on-surface truncate">
             {{ isset($category->id) ? 'Edit Category' : 'Create Category' }}
             </h2>
 

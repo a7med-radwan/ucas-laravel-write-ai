@@ -183,6 +183,40 @@ class Post extends Model
 
     public function wordCount(): int
     {
-        return \str_word_count($this->content);
+        return \str_word_count($this->content ?? '');
+    }
+
+    // $post->related();
+    public function related($limit = 3, $same_category = false)
+    {
+        if (! $this->embedding) {
+            return $this->legacyRelated($limit, $same_category);
+        }
+
+        return static::query()
+            ->selectVectorDistance('embedding', $this->embedding, 'distance')
+            ->whereVectorSimilarTo('embedding', $this->embedding, 0.4)
+            ->when($same_category, function ($query, $value) {
+                $query->where('category_id', '=', $this->category_id);
+            })
+            ->orderByVectorDistance('embedding', $this->embedding)
+            ->limit($limit)
+            ->get();
+    }
+
+    protected function legacyRelated($limit = 3, $same_category = false)
+    {
+        static::query()
+            ->when($same_category, function ($query, $value) {
+                $query->where('category_id', '=', $this->category_id);
+            })
+            ->whereHas('tags', function ($query) {
+                $query->whereIn(
+                    'id',
+                    $this->tags()->pluck('id')->toArray()
+                );
+            }, '>=', 1)
+            ->limit($limit)
+            ->get();
     }
 }

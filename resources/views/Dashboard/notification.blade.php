@@ -2,8 +2,9 @@
     <div class="pt-8 pb-section-gap px-gutter max-w-container-max mx-auto">
         <header class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
             <div class="max-w-2xl">
-                <h1 class="font-display-lg text-display-lg-mobile sm:text-display-lg text-on-surface mb-1.5">Notifications</h1>
-                <p class="font-body-md text-on-surface-variant">Stay updated with your latest interactions and community activity.</p>
+                <h1 class="font-display-lg-mobile text-[22px] font-bold text-on-surface truncate">Notifications</h1>
+                <p class="font-body-md text-on-surface-variant">Stay updated with your latest interactions and community
+                    activity.</p>
             </div>
             <form action="{{ route('dashboard.notifications.mark-all-read') }}" method="post">
                 @csrf
@@ -48,8 +49,8 @@
                                     src="{{ $notification->data['meta']['follower_avatar'] ?? '' }}" />
                                 <div
                                     class="absolute -bottom-1 -right-1 w-5 h-5 bg-white rounded-full flex items-center justify-center shadow-sm">
-                                    <span class="material-symbols-outlined text-[14px] text-primary"
-                                        data-icon="favorite" style="font-variation-settings: 'FILL' 1;">favorite</span>
+                                    <span class="material-symbols-outlined text-[14px] text-primary" data-icon="favorite"
+                                        style="font-variation-settings: 'FILL' 1;">favorite</span>
                                 </div>
                             </div>
                             <div class="flex-1 min-w-0">

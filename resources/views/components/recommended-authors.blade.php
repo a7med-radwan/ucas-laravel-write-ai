@@ -23,6 +23,6 @@
         </form>
         @endforeach
     </div>
-    <a class="block font-ui-label text-ui-label text-primary font-bold hover:underline" href="#">View all
-        recommendations</a>
+    <!-- <a class="block font-ui-label text-ui-label text-primary font-bold hover:underline" href="#">View all
+        recommendations</a> -->
 </div>

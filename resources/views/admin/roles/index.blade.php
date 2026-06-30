@@ -2,7 +2,7 @@
     <div class="pt-8 pb-section-gap px-gutter max-w-container-max mx-auto">
         <header class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
             <div class="max-w-2xl">
-                <h1 class="font-display-lg text-display-lg-mobile sm:text-display-lg text-on-surface mb-1.5">Role Management</h1>
+                <h1 class="font-display-lg-mobile text-[22px] font-bold text-on-surface truncate">Role Management</h1>
                 <p class="font-body-md text-on-surface-variant">Define roles and assign permissions to control access across the platform.</p>
             </div>
             <a href="{{ route('admin.roles.create') }}"

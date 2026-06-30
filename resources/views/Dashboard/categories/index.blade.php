@@ -2,7 +2,7 @@
     <div class="pt-8 pb-section-gap px-gutter max-w-container-max mx-auto">
         <header class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
             <div class="max-w-2xl">
-                <h1 class="font-display-lg text-display-lg-mobile sm:text-display-lg text-on-surface mb-1.5">Category Management</h1>
+                <h1 class="font-display-lg-mobile text-[22px] font-bold text-on-surface truncate">Category Management</h1>
                 <p class="font-body-md text-on-surface-variant">Organize your content structure and manage editorial categories.</p>
             </div>
             <a href="{{ route('dashboard.categories.create') }}"
