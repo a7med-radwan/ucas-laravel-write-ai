@@ -14,15 +14,15 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
-use Override;
 
 #[Fillable(['name', 'email', 'password', 'username', 'status', 'type'])]
 #[Hidden(['password', 'remember_token', 'two_factor_secret', 'two_factor_recovery_codes', 'two_factor_confirmed_at'])]
 class User extends Authenticatable
 {
+    use HasApiTokens;
+
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
-    use HasApiTokens;
 
     /**
      * Get the attributes that should be cast.
@@ -42,12 +42,17 @@ class User extends Authenticatable
         return $this->hasMany(Post::class, 'user_id', 'id');
     }
 
+    public function bookmarkedPosts(): BelongsToMany
+    {
+        return $this->belongsToMany(Post::class, 'bookmarks')->withTimestamps();
+    }
+
     public function followers(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'followers', 'user_id', 'follower_id')
             ->with([
                 'id',
-                'created_at'
+                'created_at',
             ]);
     }
 
@@ -56,7 +61,7 @@ class User extends Authenticatable
         return $this->belongsToMany(User::class, 'followers', 'follower_id', 'user_id')
             ->with([
                 'id',
-                'created_at'
+                'created_at',
             ]);
     }
 
@@ -68,7 +73,7 @@ class User extends Authenticatable
     public function avatarUrl(): Attribute
     {
         return new Attribute(
-            get: fn() => $this->avatar ? Storage::disk('public')->url($this->avatar) : asset('images/avatars/blank.png')
+            get: fn () => $this->avatar ? Storage::disk('public')->url($this->avatar) : asset('images/avatars/blank.png')
         );
     }
 
@@ -79,7 +84,7 @@ class User extends Authenticatable
 
     public function receivesBroadcastNotificationsOn()
     {
-        return 'App.Models.User.' . $this->id;
+        return 'App.Models.User.'.$this->id;
     }
 
     public function hasAbility(string $ability): bool
@@ -89,6 +94,7 @@ class User extends Authenticatable
                 return true;
             }
         }
+
         return false;
     }
 

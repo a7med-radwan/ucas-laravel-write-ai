@@ -16,10 +16,13 @@
             <a href="{{ route('posts.show', $post->slug) }}">{{ $post->title }}</a>
         </h3>
         <p class="text-on-surface-variant font-body-md text-body-md line-clamp-2">{{ $post->excerpt ?? Str::limit(strip_tags($post->content), 100) }}</p>
-        <div class="flex items-center gap-3 pt-2">
-            <p class="font-ui-label text-ui-label text-on-surface font-medium">{{ $post->user?->name ?? 'Unknown Author' }}</p>
-            <span class="text-secondary text-metadata">•</span>
-            <span class="text-secondary font-metadata text-metadata">{{ $post->views ?? 0 }} views</span>
+        <div class="flex items-center justify-between pt-2">
+            <div class="flex items-center gap-3">
+                <p class="font-ui-label text-ui-label text-on-surface font-medium">{{ $post->user?->name ?? 'Unknown Author' }}</p>
+                <span class="text-secondary text-metadata">•</span>
+                <span class="text-secondary font-metadata text-metadata">{{ $post->views ?? 0 }} views</span>
+            </div>
+            <x-contents.bookmark-button :post="$post" />
         </div>
     </div>
 </article>

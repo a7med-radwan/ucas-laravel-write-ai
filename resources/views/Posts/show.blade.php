@@ -143,11 +143,15 @@
                             </p>
                         </div>
                     </div>
+                    
                     <div class="flex gap-2">
-                        <button
+                        <x-contents.bookmark-button :post="$post" active-icon="bookmark" inactive-icon="bookmark"
+                            class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors" />
+
+                        <!-- <button
                             class="material-symbols-outlined text-secondary hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-container-high">share</button>
                         <button
-                            class="material-symbols-outlined text-secondary hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-container-high">more_horiz</button>
+                            class="material-symbols-outlined text-secondary hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-container-high">more_horiz</button> -->
                     </div>
                 </div>
             </header>
@@ -161,13 +165,126 @@
             @endif
 
             <!-- Content -->
-            <div class="post-content">
+            <div class="post-content mb-12">
                 {!! $post->content !!}
             </div>
+
+            <!-- Comments Section -->
+            <section class="mt-16 border-t border-outline-variant pt-10" id="comments-section">
+                <h3 class="font-headline-md text-headline-md text-on-surface mb-6">
+                    Comments (<span id="comments-count">{{ $post->comments()->count() }}</span>)
+                </h3>
+
+                <!-- Comment Form -->
+                @auth
+                    <form action="{{ route('posts.comments.store', $post) }}" method="POST" class="mb-8" id="comment-form">
+                        @csrf
+                        <div class="mb-4">
+                            <label for="comment-content" class="sr-only">Add a comment</label>
+                            <textarea id="comment-content" name="content" rows="4" required
+                                class="w-full px-4 py-3 rounded-xl border border-outline-variant focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-surface-container-lowest text-on-surface text-body-md resize-none transition-all placeholder:text-secondary"
+                                placeholder="Share your thoughts..."></textarea>
+                        </div>
+                        <div class="flex justify-end">
+                            <button type="submit"
+                                class="px-6 py-2.5 bg-primary text-on-primary font-ui-button text-ui-button rounded-xl hover:bg-primary-fixed-variant transition-colors shadow-sm cursor-pointer">
+                                Post Comment
+                            </button>
+                        </div>
+                    </form>
+                @else
+                    <div class="mb-8 p-6 bg-surface-container rounded-xl border border-outline-variant/60 text-center">
+                        <p class="text-on-surface-variant font-medium mb-3">You must be logged in to leave a comment.</p>
+                        <a href="{{ route('login') }}" class="inline-flex items-center justify-center px-5 py-2 bg-primary text-on-primary font-ui-button text-ui-button rounded-lg hover:opacity-90 transition-all">
+                            Log In
+                        </a>
+                    </div>
+                @endauth
+
+                <!-- Comments List -->
+                <div class="space-y-6" id="comments-list">
+                    @forelse($post->comments()->with('user')->latest()->get() as $comment)
+                        <div class="flex gap-4 p-4 bg-surface-container-low rounded-xl border border-outline-variant/30 comment-item" data-comment-id="{{ $comment->id }}">
+                            <img class="w-10 h-10 rounded-full border border-outline-variant object-cover shrink-0"
+                                alt="{{ $comment->user_name }}"
+                                src="{{ $comment->user ? 'https://ui-avatars.com/api/?name=' . urlencode($comment->user->name) . '&background=eaddff&color=630ed4&bold=true' : 'https://ui-avatars.com/api/?name=' . urlencode($comment->user_name) . '&background=e2dfde&color=5f5e5e&bold=true' }}" />
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="font-ui-label text-ui-label font-bold text-on-surface">{{ $comment->user_name }}</span>
+                                    <span class="font-metadata text-metadata text-secondary">{{ $comment->created_at->diffForHumans() }}</span>
+                                </div>
+                                <p class="text-on-surface-variant text-body-md font-body-md whitespace-pre-line">{{ $comment->content }}</p>
+                            </div>
+                        </div>
+                    @empty
+                        <p class="text-secondary font-medium py-8 text-center" id="no-comments-message">No comments yet. Be the first to share your thoughts!</p>
+                    @endforelse
+                </div>
+            </section>
         </article>
     </div>
 
-    <!-- Floating Engagement Bar -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const postId = "{{ $post->id }}";
+            const commentsList = document.getElementById('comments-list');
+            const commentsCount = document.getElementById('comments-count');
+            const noCommentsMessage = document.getElementById('no-comments-message');
+
+            if (window.Echo) {
+                window.Echo.channel(`posts.${postId}.comments`)
+                    .listen('.comment.created', (e) => {
+                        // Check if comment already exists to avoid duplication
+                        if (document.querySelector(`[data-comment-id="${e.id}"]`)) {
+                            return;
+                        }
+
+                        // Remove "no comments" message if it exists
+                        if (noCommentsMessage) {
+                            noCommentsMessage.remove();
+                        }
+
+                        // Create the comment HTML
+                        const commentElement = document.createElement('div');
+                        commentElement.className = 'flex gap-4 p-4 bg-surface-container-low rounded-xl border border-outline-variant/30 comment-item opacity-0 transform -translate-y-4 transition-all duration-500 ease-out';
+                        commentElement.setAttribute('data-comment-id', e.id);
+
+                        const avatarUrl = e.user 
+                            ? `https://ui-avatars.com/api/?name=${encodeURIComponent(e.user.name)}&background=eaddff&color=630ed4&bold=true`
+                            : `https://ui-avatars.com/api/?name=${encodeURIComponent(e.user_name)}&background=e2dfde&color=5f5e5e&bold=true`;
+
+                        commentElement.innerHTML = `
+                            <img class="w-10 h-10 rounded-full border border-outline-variant object-cover shrink-0"
+                                alt="${e.user_name}"
+                                src="${avatarUrl}" />
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="font-ui-label text-ui-label font-bold text-on-surface">${e.user_name}</span>
+                                    <span class="font-metadata text-metadata text-secondary">${e.created_at}</span>
+                                </div>
+                                <p class="text-on-surface-variant text-body-md font-body-md whitespace-pre-line">${e.content}</p>
+                            </div>
+                        `;
+
+                        // Prepend the new comment
+                        commentsList.insertBefore(commentElement, commentsList.firstChild);
+
+                        // Trigger animation
+                        setTimeout(() => {
+                            commentElement.classList.remove('opacity-0', '-translate-y-4');
+                        }, 50);
+
+                        // Update comments count
+                        if (commentsCount) {
+                            const count = parseInt(commentsCount.textContent) || 0;
+                            commentsCount.textContent = count + 1;
+                        }
+                    });
+            }
+        });
+    </script>
+
+    <!-- Floating Engagement Bar
     <div class="fixed bottom-10 left-1/2 -translate-x-1/2 z-40">
         <div
             class="flex items-center gap-6 px-6 py-3 bg-white/90 backdrop-blur-md rounded-full border border-outline-variant/60 shadow-[0_20px_40px_rgba(0,0,0,0.08)]">
@@ -183,10 +300,8 @@
                 <span class="font-ui-label text-ui-label text-secondary group-hover:text-primary">84</span>
             </div>
             <div class="w-px h-6 bg-outline-variant"></div>
-            <button
-                class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">bookmark</button>
-            <button
+           <button
                 class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">ios_share</button>
         </div>
-    </div>
+    </div> -->
 </x-layout>

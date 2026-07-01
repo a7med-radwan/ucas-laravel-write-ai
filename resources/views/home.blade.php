@@ -90,9 +90,7 @@
                                             <p class="font-metadata text-metadata text-secondary">Author</p>
                                         </div>
                                     </div>
-                                    <button class="text-primary p-2 rounded-full hover:bg-primary-fixed/30 transition-colors" type="button">
-                                        <span class="material-symbols-outlined">bookmark_add</span>
-                                    </button>
+                                    <x-contents.bookmark-button :post="$featuredPost" />
                                 </div>
                             </div>
                         </article>

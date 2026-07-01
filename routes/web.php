@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AdminDashboard\RoleController;
 use App\Http\Controllers\AdminDashboard\UserController;
+use App\Http\Controllers\BookmarkController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\Dashboard\AiWriteController;
 use App\Http\Controllers\Dashboard\CategoryController;
 use App\Http\Controllers\Dashboard\NotificationController;
@@ -18,7 +20,7 @@ Route::get('/posts/{slug}', [App\Http\Controllers\PostController::class, 'show']
     ->name('posts.show');
 Route::get('/', HomeController::class)->name('home');
 Route::get('/search', SearchController::class)->name('search');
-Route::get('/u/{username}', function () {})
+Route::get('/u/{username}', function () { })
     ->name('users.profile');
 
 Route::post('users/{user}/follow', [FollowController::class, 'store'])
@@ -26,6 +28,17 @@ Route::post('users/{user}/follow', [FollowController::class, 'store'])
     ->middleware(['auth:web']);
 Route::delete('users/{user}/unfollow', [FollowController::class, 'destroy'])
     ->name('users.unfollow')
+    ->middleware(['auth:web']);
+
+Route::post('posts/{post}/bookmark', [BookmarkController::class, 'store'])
+    ->name('posts.bookmark')
+    ->middleware(['auth:web']);
+Route::delete('posts/{post}/bookmark', [BookmarkController::class, 'destroy'])
+    ->name('posts.unbookmark')
+    ->middleware(['auth:web']);
+
+Route::post('posts/{post}/comments', [CommentController::class, 'store'])
+    ->name('posts.comments.store')
     ->middleware(['auth:web']);
 
 Route::group([
