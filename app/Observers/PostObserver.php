@@ -19,6 +19,15 @@ class PostObserver
     }
 
     /**
+     * Handle the Post "created" event.
+     */
+    public function created(Post $post): void
+    {
+        // Dispatch job to sync tags from the request
+        \App\Jobs\SyncTagsJob::dispatch($post, request('tags', ''));
+    }
+
+    /**
      * Handle the Post "force deleted" event.
      */
     public function forceDeleted(Post $post): void
