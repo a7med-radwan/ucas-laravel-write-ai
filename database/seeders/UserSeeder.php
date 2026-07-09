@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('users')->insert([
+        $admin = \App\Models\User::create([
             'name' => 'Admin',
             'email' => 'admin@gmail.com',
             'email_verified_at' => now(),
@@ -28,7 +28,7 @@ class UserSeeder extends Seeder
             'updated_at' => now(),
         ]);
 
-        DB::table('users')->insert([
+        $superAdmin = \App\Models\User::create([
             'name' => 'Super Admin',
             'email' => 'super-admin@gmail.com',
             'email_verified_at' => now(),
@@ -40,6 +40,16 @@ class UserSeeder extends Seeder
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+
+        $superAdminRole = \App\Models\Role::where('name', 'Super Admin')->first();
+        if ($superAdminRole) {
+            $superAdmin->roles()->attach($superAdminRole->id);
+        }
+
+        $managerRole = \App\Models\Role::where('name', 'Manager')->first();
+        if ($managerRole) {
+            $admin->roles()->attach($managerRole->id);
+        }
         // $users = [
         //     [
         //         'name' => 'Admin User',

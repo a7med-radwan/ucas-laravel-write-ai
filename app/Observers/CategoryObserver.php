@@ -16,17 +16,4 @@ class CategoryObserver
             $category->slug = Str::slug($category->name);
         }
     }
-
-    public function restored(Category $category): void
-    {
-        $category->posts()->update([
-                'deleted_at' => null,
-            ]);
-
-    }
-    public function deleted(Category $category): void
-    {
-        $category->posts()->delete();
-
-    }
 }

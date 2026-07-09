@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Testing\Fluent\AssertableJson;
 use JsonSerializable;
+use Laravel\Ai\Embeddings;
 use Tests\TestCase;
 
 class PostResourceApiTest extends TestCase
@@ -19,6 +20,8 @@ class PostResourceApiTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+
+        Embeddings::fake();
 
         $this->posts = Post::factory(5)->create();
     }

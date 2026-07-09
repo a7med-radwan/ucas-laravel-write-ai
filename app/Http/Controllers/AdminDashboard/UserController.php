@@ -49,9 +49,13 @@ class UserController extends Controller
 
         $data['password'] = Hash::make($data['password']);
 
+        if (!isset($data['type'])) {
+            $data['type'] = 'user';
+        }
+
         $user = User::create($data);
 
-        if (isset($data['roles'])) {
+        if (($request->user()->type === 'super-admin' || $request->user()->hasRole('Super Admin')) && isset($data['roles'])) {
             $user->roles()->sync($data['roles']);
         }
 
@@ -98,10 +102,12 @@ class UserController extends Controller
 
         $user->update($data);
 
-        if (isset($data['roles'])) {
-            $user->roles()->sync($data['roles']);
-        } else {
-            $user->roles()->detach();
+        if ($request->user()->type === 'super-admin' || $request->user()->hasRole('Super Admin')) {
+            if (isset($data['roles'])) {
+                $user->roles()->sync($data['roles']);
+            } else {
+                $user->roles()->detach();
+            }
         }
 
         return redirect()->route('admin.users.index')

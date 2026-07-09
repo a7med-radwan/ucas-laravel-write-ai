@@ -74,6 +74,10 @@ class RoleController extends Controller
             'abilities.*' => 'string',
         ]);
 
+        if ($role->name === 'Super Admin' && $data['name'] !== 'Super Admin') {
+            return redirect()->back()->withErrors(['name' => 'The Super Admin role name cannot be renamed.']);
+        }
+
         $role->update([
             'name' => $data['name'],
             'abilities' => $data['abilities'] ?? [],
@@ -89,6 +93,12 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
+        if ($role->name === 'Super Admin') {
+            return redirect()
+                ->route('admin.roles.index')
+                ->with('error', 'The Super Admin role is a core system role and cannot be deleted.');
+        }
+
         $role->delete();
 
         return redirect()

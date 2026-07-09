@@ -7,11 +7,18 @@ use App\Models\Post;
 use App\Models\User;
 use App\Services\PostService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Laravel\Ai\Embeddings;
 use Tests\TestCase;
 
 class PostCreateServiceTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        Embeddings::fake();
+    }
 
     /**
      * A basic unit test example.

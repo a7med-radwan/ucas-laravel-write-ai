@@ -38,8 +38,15 @@ class AppServiceProvider extends ServiceProvider
 
         //Event::listen(PostViewed::class, IncrementPostViews::class);
 
-        Gate::before(function ($user, $ability) {
-            if ($user->hasRole('Super Admin')) {
+        Gate::before(function ($user, $ability, $arguments) {
+            if (in_array($ability, ['update', 'delete', 'restore', 'forceDelete'])) {
+                $target = $arguments[0] ?? null;
+                if ($target instanceof \App\Models\User && $user->id === $target->id) {
+                    return false;
+                }
+            }
+
+            if ($user->type === 'super-admin' || $user->hasRole('Super Admin')) {
                 return true;
             }
         });

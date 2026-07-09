@@ -10,7 +10,11 @@ class UserPolicy
 
     public function before($user, $ability)
     {
-        if ($user->hasRole('Super Admin')) {
+        if (in_array($ability, ['update', 'delete', 'restore', 'forceDelete'])) {
+            return null;
+        }
+
+        if ($user->type === 'super-admin' || $user->hasRole('Super Admin')) {
             return true;
         }
     }
@@ -44,7 +48,11 @@ class UserPolicy
      */
     public function update(User $user, User $model): bool
     {
-        return $user->hasAbility('users.update');
+        if ($user->id === $model->id) {
+            return false;
+        }
+
+        return $user->type === 'super-admin' || $user->hasRole('Super Admin') || $user->hasAbility('users.update');
     }
 
     /**
@@ -52,7 +60,11 @@ class UserPolicy
      */
     public function delete(User $user, User $model): bool
     {
-        return $user->hasAbility('users.delete');
+        if ($user->id === $model->id) {
+            return false;
+        }
+
+        return $user->type === 'super-admin' || $user->hasRole('Super Admin') || $user->hasAbility('users.delete');
     }
 
     /**
@@ -60,7 +72,11 @@ class UserPolicy
      */
     public function restore(User $user, User $model): bool
     {
-        return $user->hasAbility('users.delete');
+        if ($user->id === $model->id) {
+            return false;
+        }
+
+        return $user->type === 'super-admin' || $user->hasRole('Super Admin') || $user->hasAbility('users.delete');
     }
 
     /**
@@ -68,7 +84,11 @@ class UserPolicy
      */
     public function forceDelete(User $user, User $model): bool
     {
-        return $user->hasAbility('users.delete');
+        if ($user->id === $model->id) {
+            return false;
+        }
+
+        return $user->type === 'super-admin' || $user->hasRole('Super Admin') || $user->hasAbility('users.delete');
     }
 
 }

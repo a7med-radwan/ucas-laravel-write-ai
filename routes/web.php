@@ -25,21 +25,21 @@ Route::get('/u/{username}', function () { })
 
 Route::post('users/{user}/follow', [FollowController::class, 'store'])
     ->name('users.follow')
-    ->middleware(['auth:web']);
+    ->middleware(['auth:web', 'active']);
 Route::delete('users/{user}/unfollow', [FollowController::class, 'destroy'])
     ->name('users.unfollow')
-    ->middleware(['auth:web']);
+    ->middleware(['auth:web', 'active']);
 
 Route::post('posts/{post}/bookmark', [BookmarkController::class, 'store'])
     ->name('posts.bookmark')
-    ->middleware(['auth:web']);
+    ->middleware(['auth:web', 'active']);
 Route::delete('posts/{post}/bookmark', [BookmarkController::class, 'destroy'])
     ->name('posts.unbookmark')
-    ->middleware(['auth:web']);
+    ->middleware(['auth:web', 'active']);
 
 Route::post('posts/{post}/comments', [CommentController::class, 'store'])
     ->name('posts.comments.store')
-    ->middleware(['auth:web']);
+    ->middleware(['auth:web', 'active']);
 
 Route::group([
     'as' => 'dashboard.',
@@ -53,6 +53,11 @@ Route::group([
     Route::resource('posts', PostController::class);
 
     Route::resource('categories', CategoryController::class)->middleware('type:super-admin,admin');
+
+    Route::get('profile', [App\Http\Controllers\Dashboard\ProfileController::class, 'edit'])
+        ->name('profile');
+    Route::put('profile', [App\Http\Controllers\Dashboard\ProfileController::class, 'update'])
+        ->name('profile.update');
 
     Route::group([
         'as' => 'notifications.',
@@ -76,3 +81,4 @@ Route::group([
     Route::resource('roles', RoleController::class)->except(['show'])->middleware('type:super-admin');
     Route::resource('users', UserController::class);
 });
+

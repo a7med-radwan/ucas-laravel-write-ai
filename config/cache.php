@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Str;
 
 return [
@@ -125,6 +126,13 @@ return [
     |
     */
 
-    'serializable_classes' => false,
+    'serializable_classes' => [
+        LengthAwarePaginator::class,
+        \Illuminate\Database\Eloquent\Collection::class,
+        \App\Models\Post::class,
+        \App\Models\Category::class,
+        \App\Models\User::class,
+        \App\Models\Tag::class,
+    ],
 
 ];

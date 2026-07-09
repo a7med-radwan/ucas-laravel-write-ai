@@ -5,7 +5,7 @@
         <div class="flex items-center gap-1">
             <div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant shrink-0 bg-primary-fixed">
                 <img alt="{{ $user->name }}" class="w-full h-full object-cover"
-                    src="https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&background=eaddff&color=630ed4&bold=true" />
+                    src="{{ $user->avatar_url }}" />
             </div>
             <a href="{{ route('logout') }}"
                 class="p-2 text-on-surface-variant hover:text-error rounded-lg transition-all"
@@ -18,7 +18,7 @@
         <div class="flex items-center gap-2.5 min-w-0 p-1.5 rounded-lg hover:bg-surface-container transition-colors">
             <div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant shrink-0 bg-primary-fixed">
                 <img alt="{{ $user->name }}" class="w-full h-full object-cover"
-                    src="https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&background=eaddff&color=630ed4&bold=true" />
+                    src="{{ $user->avatar_url }}" />
             </div>
             <div class="min-w-0 flex-1">
                 <p class="font-ui-label text-ui-label font-bold text-on-surface truncate text-sm leading-tight">{{ $user->name }}</p>

@@ -178,6 +178,11 @@
                             </span>
                         @endif
                     </a>
+                    <a href="{{ route('dashboard.profile') }}"
+                        class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors {{ request()->routeIs('dashboard.profile') ? 'bg-primary-fixed text-on-primary-fixed font-bold' : 'text-on-surface-variant font-medium hover:bg-surface-container hover:text-on-surface' }}">
+                        <span class="material-symbols-outlined text-[22px]">person</span>
+                        Profile Settings
+                    </a>
                 </div>
 
                 @can('users.view')

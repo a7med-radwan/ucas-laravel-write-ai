@@ -23,9 +23,9 @@ class PostService
         //
     }
 
-    public function create(PostRequest $request): Post
+    public function create(array|PostRequest $request): Post
     {
-        $clean = $request->validated();
+        $clean = $request instanceof PostRequest ? $request->validated() : $request;
 
         $data = array_merge($clean, [
             'status' => 'published',
@@ -75,12 +75,16 @@ class PostService
             //     $post->cover_image = $image->store('covers', 'public');
             // }
 
-            $response = Embeddings::for([$post->content])
-                ->generate(
-                    provider: Lab::Gemini
-                );
-            //dd($response->embeddings[0]);
-            //$post->embedding = $response->embeddings[0];
+            try {
+                $response = Embeddings::for([$post->content])
+                    ->generate(
+                        provider: Lab::Gemini
+                    );
+                //dd($response->embeddings[0]);
+                //$post->embedding = $response->embeddings[0];
+            } catch (Throwable $e) {
+                report($e);
+            }
 
             $post->save();
 

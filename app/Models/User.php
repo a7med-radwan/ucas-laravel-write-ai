@@ -15,7 +15,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
 
-#[Fillable(['name', 'email', 'password', 'username', 'status', 'type'])]
+#[Fillable(['name', 'email', 'password', 'username', 'status', 'type', 'avatar'])]
 #[Hidden(['password', 'remember_token', 'two_factor_secret', 'two_factor_recovery_codes', 'two_factor_confirmed_at'])]
 class User extends Authenticatable
 {
@@ -73,7 +73,9 @@ class User extends Authenticatable
     public function avatarUrl(): Attribute
     {
         return new Attribute(
-            get: fn () => $this->avatar ? Storage::disk('public')->url($this->avatar) : asset('images/avatars/blank.png')
+            get: fn () => $this->avatar 
+                ? '/storage/' . $this->avatar 
+                : 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=eaddff&color=630ed4&bold=true'
         );
     }
 

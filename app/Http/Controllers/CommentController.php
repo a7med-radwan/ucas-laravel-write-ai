@@ -11,6 +11,8 @@ class CommentController extends Controller
 {
     public function store(Request $request, Post $post)
     {
+        abort_unless($post->status === \App\Enums\PostStatus::Published, 403, 'You cannot comment on this post.');
+
         $validated = $request->validate([
             'content' => 'required|string|max:1000',
         ]);

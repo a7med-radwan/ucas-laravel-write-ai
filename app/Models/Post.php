@@ -43,6 +43,7 @@ class Post extends Model
 
     protected $fillable = [
         'category_id',
+        'user_id',
         'title',
         'content',
         'excerpt',
@@ -172,7 +173,7 @@ class Post extends Model
         return new Attribute(
             get: function () {
                 return $this->cover_image
-                    ? Storage::disk('public')->url($this->cover_image)
+                    ? '/storage/' . $this->cover_image
                     : asset('images/default-thumbnail.jpg');
             }
         );

@@ -19,6 +19,13 @@
             </div>
         @endif
 
+        @if (session()->has('error'))
+            <div class="mb-6 p-4 bg-red-50 text-red-800 rounded-xl border border-red-200 flex items-center gap-3">
+                <span class="material-symbols-outlined text-red-600">error</span>
+                <span class="font-ui-label text-ui-label">{{ session('error') }}</span>
+            </div>
+        @endif
+
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             @foreach ($roles as $role)
                 <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 hover:border-primary/40 transition-colors flex flex-col">
@@ -37,16 +44,18 @@
                                 title="Edit">
                                 <span class="material-symbols-outlined text-[20px]">edit</span>
                             </a>
-                            <button
-                                onclick="confirm('Are you sure you want to delete this role?') ? document.getElementById('deleterole{{ $role->id }}').submit() : null;"
-                                class="p-2 text-on-surface-variant hover:bg-error-container hover:text-error rounded-lg transition-all"
-                                title="Delete">
-                                <span class="material-symbols-outlined text-[20px]">delete</span>
-                            </button>
-                            <form class="hidden" id="deleterole{{ $role->id }}" action="{{ route('admin.roles.destroy', $role) }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                            </form>
+                            @if ($role->name !== 'Super Admin')
+                                <button
+                                    onclick="confirm('Are you sure you want to delete this role?') ? document.getElementById('deleterole{{ $role->id }}').submit() : null;"
+                                    class="p-2 text-on-surface-variant hover:bg-error-container hover:text-error rounded-lg transition-all"
+                                    title="Delete">
+                                    <span class="material-symbols-outlined text-[20px]">delete</span>
+                                </button>
+                                <form class="hidden" id="deleterole{{ $role->id }}" action="{{ route('admin.roles.destroy', $role) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                </form>
+                            @endif
                         </div>
                     </div>
 
