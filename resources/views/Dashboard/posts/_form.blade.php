@@ -103,6 +103,13 @@
                     <h3 class="font-headline-md text-[20px] text-on-surface font-semibold">SEO & Extra Metadata</h3>
                 </div>
 
+                <div class="p-4 bg-primary/5 border border-primary/10 rounded-lg flex items-start gap-2.5">
+                    <span class="material-symbols-outlined text-primary text-[20px]">info</span>
+                    <span class="text-xs text-secondary leading-normal">
+                        <strong>AI Auto-Generation:</strong> If you leave the SEO fields (Meta Title, Keywords, Description) blank, the AI will automatically generate and fill them in the background once you save the post.
+                    </span>
+                </div>
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="flex flex-col gap-1.5">
                         <label
@@ -226,7 +233,8 @@
                         class="w-full bg-white border border-outline-variant rounded-lg px-4 py-2.5 font-metadata text-metadata focus:ring-1 focus:ring-primary focus:border-primary transition-all text-on-surface">
                         <option value="">Select category</option>
                         @foreach ($categories as $category)
-                            <option value="{{ $category->id }}" @if (old('category_id', $post->category_id) == $category->id) selected @endif>
+                            <option value="{{ $category->id }}" @if (old('category_id', $post->category_id) == $category->id)
+                            selected @endif>
                                 {{ $category->name }}
                             </option>
                         @endforeach
@@ -313,8 +321,8 @@
         toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
         branding: false,
         promotion: false,
-        setup: function(editor) {
-            editor.on('change keyup', function() {
+        setup: function (editor) {
+            editor.on('change keyup', function () {
                 editor.save();
                 updateSEODescriptionFromEditor(editor.getContent({
                     format: 'text'
@@ -327,7 +335,7 @@
     function previewCoverImage(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = function (e) {
                 var container = document.getElementById('cover-preview-container');
                 container.innerHTML = `
                     <div class="aspect-video w-full rounded-lg bg-cover bg-center mb-2 border border-outline-variant relative group overflow-hidden"
@@ -393,7 +401,7 @@
     }
 
     // AI button & SSE streaming logic
-    (function() {
+    (function () {
         const aiBtn = document.getElementById('ai-btn');
         const aiModal = document.getElementById('ai-modal');
         const aiClose = document.getElementById('ai-close');
@@ -459,7 +467,7 @@
         aiClose.addEventListener('click', cancelStreamAndClose);
         aiCancel.addEventListener('click', cancelStreamAndClose);
 
-        aiGenerate.addEventListener('click', function() {
+        aiGenerate.addEventListener('click', function () {
             const prompt = aiInput.value.trim();
             if (!prompt) {
                 aiInput.focus();
@@ -480,7 +488,7 @@
             // Buffer to accumulate the full markdown response
             let markdownBuffer = '';
 
-            evtSource.onmessage = function(e) {
+            evtSource.onmessage = function (e) {
                 try {
                     const data = JSON.parse(e.data);
                     const delta = data?.delta || '';
@@ -495,7 +503,7 @@
                 }
             };
 
-            evtSource.addEventListener('close', function() {
+            evtSource.addEventListener('close', function () {
                 // Stream finished — convert accumulated Markdown → HTML and set in editor
                 flushMarkdownToEditor(markdownBuffer);
                 markdownBuffer = '';
@@ -506,7 +514,7 @@
                 }
             });
 
-            evtSource.onerror = function(err) {
+            evtSource.onerror = function (err) {
                 // Also flush whatever we have on error/end
                 if (markdownBuffer) {
                     flushMarkdownToEditor(markdownBuffer);
@@ -523,7 +531,7 @@
             closeModal();
         });
         // Clean up when leaving the page
-        window.addEventListener('beforeunload', function() {
+        window.addEventListener('beforeunload', function () {
             if (evtSource) evtSource.close();
         });
     })();

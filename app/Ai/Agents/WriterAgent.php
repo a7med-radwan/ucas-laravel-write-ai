@@ -15,7 +15,7 @@ use Laravel\Ai\Promptable;
 use Stringable;
 
 #[Provider(Lab::Groq)]
-class WriterAgent implements Agent, Conversational, HasTools, HasStructuredOutput
+class WriterAgent implements Agent, Conversational, HasTools
 {
     use Promptable;
 

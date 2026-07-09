@@ -46,8 +46,8 @@ class GeneratePostAiMetadata implements ShouldQueue
             $this->post->meta = [
                 'title' => $response['title'] ?? '',
                 'description' => $response['description'] ?? '',
-                'keywords' => is_array($response['keywords'] ?? null) 
-                    ? implode(', ', $response['keywords']) 
+                'keywords' => is_array($response['keywords'] ?? null)
+                    ? implode(', ', $response['keywords'])
                     : ($response['keywords'] ?? ''),
                 'summary' => $response['summary'] ?? '',
             ];

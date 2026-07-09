@@ -4,14 +4,11 @@ namespace App\Services;
 
 use App\Actions\FileUpload;
 use App\Actions\SyncPostTags;
-use App\Ai\Agents\SeoAgent;
 use App\Jobs\GeneratePostAiMetadata;
 use App\Http\Requests\PostRequest;
 use App\Models\Post;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Laravel\Ai\Embeddings;
-use Laravel\Ai\Enums\Lab;
 use Throwable;
 
 class PostService
