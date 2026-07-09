@@ -8,6 +8,7 @@ use App\Http\Controllers\Dashboard\AiWriteController;
 use App\Http\Controllers\Dashboard\CategoryController;
 use App\Http\Controllers\Dashboard\NotificationController;
 use App\Http\Controllers\Dashboard\PostController;
+use App\Http\Controllers\Dashboard\ProfileController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SearchController;
@@ -54,9 +55,9 @@ Route::group([
 
     Route::resource('categories', CategoryController::class)->middleware('type:super-admin,admin');
 
-    Route::get('profile', [App\Http\Controllers\Dashboard\ProfileController::class, 'edit'])
+    Route::get('profile', [ProfileController::class, 'edit'])
         ->name('profile');
-    Route::put('profile', [App\Http\Controllers\Dashboard\ProfileController::class, 'update'])
+    Route::put('profile', [ProfileController::class, 'update'])
         ->name('profile.update');
 
     Route::group([
