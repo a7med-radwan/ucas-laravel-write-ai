@@ -48,8 +48,7 @@ class AiWriteController extends Controller
         // SSE response
         return WriterAgent::make()->stream(
             prompt: $prompt,
-            provider: Lab::Groq,
-            model: 'openai/gpt-oss-20b',
+            provider: [Lab::Groq, Lab::Gemini],
         );
     }
 }
