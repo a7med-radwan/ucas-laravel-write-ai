@@ -9,8 +9,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
-class FollowNotification extends Notification
+class FollowNotification extends Notification implements ShouldBroadcastNow
 {
     use Queueable;
 
@@ -28,14 +29,10 @@ class FollowNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        $via = ['database', 'mail', 'broadcast'];
+        $via = ['database', 'broadcast', 'mail'];
 
         if ($notifiable->sms_notify) {
             $via[] = 'vonage';
-        }
-
-        if ($notifiable->broadcast_norify) {
-            $via[] = 'broadcast';
         }
 
         return $via;
@@ -77,10 +74,10 @@ class FollowNotification extends Notification
             ],
         ];
     }
-    
+
     public function toBroadcast(object $notifiable): array|BroadcastMessage
     {
-        return new BroadcastMessage([
+        return (new BroadcastMessage([
             'title' => 'New follower',
             'body' => "{$this->follower->name} started following you.",
             'link' => route('users.profile', $this->follower->username),
@@ -88,7 +85,7 @@ class FollowNotification extends Notification
                 'follower_id' => $this->follower->id,
                 'follower_avatar' => $this->follower->avatar,
             ],
-        ]);
+        ]))->onConnection('sync');
     }
 
     /**

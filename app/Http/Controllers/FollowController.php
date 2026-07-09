@@ -29,21 +29,11 @@ class FollowController extends Controller
             ]);
 
             // Send notification
-            // $user->notify(new FollowNotification($user, $follower));
-
-            dispatch(new SendNotification(
-                new FollowNotification($user, $follower),
-                $user   
-            ))->onQueue('notifications');
-
-            // $users = User::all();
-            // Notification::send($users, new FollowNotification($user, $follower));
-
-            // Notification::route('mail', 'info@test.co')
-            //     ->notify(new FollowNotification($user, $follower));
-
-            // Mail::to([$user->email])
-            //     ->send(new GreetingMessage($user->name));
+            try {
+                $user->notify(new FollowNotification($user, $follower));
+            } catch (\Throwable $e) {
+                report($e);
+            }
         }
 
         return Redirect::back();

@@ -158,7 +158,7 @@
                         class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors {{ request()->routeIs('dashboard.posts.*') ? 'bg-primary-fixed text-on-primary-fixed font-bold' : 'text-on-surface-variant font-medium hover:bg-surface-container hover:text-on-surface' }}">
                         <span class="material-symbols-outlined text-[22px]">article</span>
                         Posts
-                        
+
                     </a>
                     @if (in_array(auth()->user()->type, ['admin', 'super-admin']))
                         <a href="{{ route('dashboard.categories.index') }}"
@@ -171,12 +171,10 @@
                         class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors {{ request()->routeIs('dashboard.notifications.*') ? 'bg-primary-fixed text-on-primary-fixed font-bold' : 'text-on-surface-variant font-medium hover:bg-surface-container hover:text-on-surface' }}">
                         <span class="material-symbols-outlined text-[22px]">notifications</span>
                         Notifications
-                        @if (auth()->user()->unreadNotifications()->count())
-                            <span
-                                class="ml-auto inline-flex items-center justify-center bg-primary text-on-primary text-[10px] font-bold rounded-full min-w-[18px] h-[18px] px-1">
-                                {{ auth()->user()->unreadNotifications()->count() }}
-                            </span>
-                        @endif
+                        <span id="desktop-notification-badge"
+                            class="ml-auto inline-flex items-center justify-center bg-primary text-on-primary text-[10px] font-bold rounded-full min-w-[18px] h-[18px] px-1 {{ auth()->user()->unreadNotifications()->count() ? '' : 'hidden' }}">
+                            {{ auth()->user()->unreadNotifications()->count() }}
+                        </span>
                     </a>
                     <a href="{{ route('dashboard.profile') }}"
                         class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors {{ request()->routeIs('dashboard.profile') ? 'bg-primary-fixed text-on-primary-fixed font-bold' : 'text-on-surface-variant font-medium hover:bg-surface-container hover:text-on-surface' }}">
@@ -186,16 +184,16 @@
                 </div>
 
                 @can('users.view')
-                <div class="space-y-0.5 pt-3 border-t border-outline-variant/60">
-                    
-                <span
-                        class="px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-outline block">Administration</span>
-                    <a href="{{ route('admin.users.index') }}"
-                        class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors {{ request()->routeIs('admin.users.*') ? 'bg-primary-fixed text-on-primary-fixed font-bold' : 'text-on-surface-variant font-medium hover:bg-surface-container hover:text-on-surface' }}">
-                        <span class="material-symbols-outlined text-[22px]">manage_accounts</span>
-                        Users
-                    </a>
-                    @endcan
+                    <div class="space-y-0.5 pt-3 border-t border-outline-variant/60">
+
+                        <span
+                            class="px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-outline block">Administration</span>
+                        <a href="{{ route('admin.users.index') }}"
+                            class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors {{ request()->routeIs('admin.users.*') ? 'bg-primary-fixed text-on-primary-fixed font-bold' : 'text-on-surface-variant font-medium hover:bg-surface-container hover:text-on-surface' }}">
+                            <span class="material-symbols-outlined text-[22px]">manage_accounts</span>
+                            Users
+                        </a>
+                @endcan
                     @if (auth()->user()->type == 'super-admin')
                         <a href="{{ route('admin.roles.index') }}"
                             class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors {{ request()->routeIs('admin.roles.*') ? 'bg-primary-fixed text-on-primary-fixed font-bold' : 'text-on-surface-variant font-medium hover:bg-surface-container hover:text-on-surface' }}">
@@ -229,9 +227,8 @@
                     <a href="{{ route('dashboard.notifications.index') }}"
                         class="relative p-2 text-on-surface-variant rounded-lg">
                         <span class="material-symbols-outlined text-[22px]">notifications</span>
-                        @if (auth()->user()->unreadNotifications()->count())
-                            <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-full"></span>
-                        @endif
+                        <span id="mobile-notification-badge"
+                            class="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-full {{ auth()->user()->unreadNotifications()->count() ? '' : 'hidden' }}"></span>
                     </a>
                 @endauth
                 <x-user-menu variant="compact" />
